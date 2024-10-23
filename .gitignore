@@ -1,0 +1,22 @@
+# macOS specific
+.DS_Store
+
+# Xcode specific
+build/
+DerivedData/
+xcuserdata
+*.xcodeproj
+
+# Swift Package Manager
+.swiftpm
+.build
+Packages
+Package.resolved
+
+# Environment files
+.env
+.env.*
+! .env.example
+
+# Ignore private keys or certificates
+*.pem

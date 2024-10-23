@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "77B1C75F-7CF8-4C8C-880C-329A06053F6A",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : false,
+      "target" : {
+        "containerPath" : "container:ClearPoolWater.xcodeproj",
+        "identifier" : "9609A7852CB6C7EF00E32B76",
+        "name" : "ClearPoolWaterTests"
+      }
+    }
+  ],
+  "version" : 2
+}

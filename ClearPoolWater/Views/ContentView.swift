@@ -10,16 +10,11 @@ import SwiftUI
 /// Main ContentView of the app
 struct ContentView: View {
     var body: some View {
-        #if DEBUG
-            // LoginView()
+        if AuthManager.shared.isLoggedIn {
             PoolTabView()
-        #else
-            if Auth.shared.loggedIn {
-                PoolTabView()
-            } else {
-                LoginView()
-            }
-        #endif
+        } else {
+            LoginView()
+        }
     }
 }
 

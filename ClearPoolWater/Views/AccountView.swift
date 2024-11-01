@@ -24,9 +24,6 @@ struct AccountView: View {
             .buttonStyle(.borderedProminent)
         }
         .padding(40)
-        .task {
-            await model.fetchData()
-        }
     }
 }
 

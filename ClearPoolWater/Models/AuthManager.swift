@@ -5,38 +5,86 @@
 //  Created by Stanimir Hristov on 11.10.24.
 //
 
+import Combine
 import Foundation
+import JWTDecode
 
 @Observable
 final class AuthManager: AuthManaging {
     static let shared = AuthManager()
 
-    private(set) var loggedIn = false
+    var isLoggedIn = false
 
-    var accessToken: String? { userToken?.value }
-    var userId: Int? { userToken?.user }
-
-    private var userToken: UserToken?
-
-    private init() {
-        userToken = .init(value: "", user: 1)
+    var token: String? {
+        get { tokenSubject.value }
+        set { tokenSubject.send(newValue) }
     }
 
-    func login(with userToken: UserToken) {
-        self.userToken = userToken
+    var userId: Int? { internalUserId }
+    var isAdmin: Bool? { internalIsAdmin }
 
-        loggedIn = true
+    var tokenPublisher: AnyPublisher<String?, Never> {
+        tokenSubject.eraseToAnyPublisher()
+    }
+
+    private var userToken: UserToken?
+    private var internalUserId: Int?
+    private var internalIsAdmin: Bool?
+
+    private var tokenSubject = CurrentValueSubject<String?, Never>(nil)
+
+    private init() {
+        if let savedToken = loadTokenFromKeychain() {
+            login(with: savedToken, isFromKeychain: true)
+        }
+    }
+
+    func login(with token: String) {
+        login(with: token, isFromKeychain: false)
+    }
+
+    private func login(with token: String, isFromKeychain: Bool) {
+        do {
+            let jwt = try JWTDecode.decode(jwt: token)
+            if let userId = jwt["userId"].integer {
+                internalUserId = userId
+            }
+            if let admin = jwt["admin"].boolean {
+                internalIsAdmin = admin
+            }
+        } catch {
+            assertionFailure("Failed to decode JWT: \(error)")
+        }
+
+        self.token = token
+
+        if !isFromKeychain {
+            saveTokenToKeychain(token)
+        }
+
+        isLoggedIn = true
     }
 
     func logout() {
+        internalUserId = nil
+        internalIsAdmin = nil
+
         userToken = nil
 
-        loggedIn = false
+        isLoggedIn = false
     }
 
-    // TODO: Add keychain support
-    //    enum KeychainKey: String {
-    //        case accessToken
-    //        case refreshToken
-    //    }
+    // MARK: Keychain Support
+
+    private func saveTokenToKeychain(_ token: String) {
+        do {
+            try KeychainManager.shared.saveToken(token, forKey: KeychainKeys.token)
+        } catch {
+            assertionFailure("Failed to save token to keychain: \(error)")
+        }
+    }
+
+    private func loadTokenFromKeychain() -> String? {
+        KeychainManager.shared.getToken(forKey: KeychainKeys.token)
+    }
 }

@@ -6,6 +6,5 @@
 //
 
 struct UserToken: Codable {
-    let value: String
-    let user: Int
+    let token: String
 }

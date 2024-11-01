@@ -5,10 +5,16 @@
 //  Created by Stanimir Hristov on 22.10.24.
 //
 
-protocol AuthManaging {
-    var accessToken: String? { get }
-    var userId: Int? { get }
+import Combine
 
-    func login(with userToken: UserToken)
+protocol AuthManaging {
+    var isLoggedIn: Bool { get set }
+    var token: String? { get set }
+    var userId: Int? { get }
+    var isAdmin: Bool? { get }
+
+    var tokenPublisher: AnyPublisher<String?, Never> { get }  // Add publisher for the token
+
+    func login(with token: String)
     func logout()
 }

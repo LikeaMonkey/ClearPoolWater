@@ -26,11 +26,13 @@ struct PoolTabView: View {
             }
 
             Tab("Calculator", systemImage: "plus.forwardslash.minus") {
-                PoolCalculatorView()
+                NavigationStack {
+                    WaterBalanceCalculatorView()
+                }
             }
 
             Tab("Photo", systemImage: "photo") {
-                PoolPhotoView()
+                PoolPredictionView()
             }
 
             Tab("Account", systemImage: "person.crop.circle.fill") {

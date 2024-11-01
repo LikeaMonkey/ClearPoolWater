@@ -14,29 +14,25 @@ final class PoolsViewModel {
 
     private let authManager: AuthManaging
     private let apiClient: APIClient
-    private let urlProvider: URLProviding
 
     private let logger = Logger(subsystem: "com.clear.pool.water.pools", category: "PoolsViewModel")
 
     init(
         authManager: AuthManaging = AuthManager.shared,
-        apiClient: APIClient = NetworkManager(),
-        urlProvider: URLProviding = URLProvider()
+        apiClient: APIClient = APIManager()
     ) {
         self.authManager = authManager
         self.apiClient = apiClient
-        self.urlProvider = urlProvider
     }
 
-    func fetch() async {
+    func fetchPools() async {
         guard let userId = authManager.userId else {
             logger.error("User ID is not set")
             return
         }
 
         do {
-            let url: URL = urlProvider.poolsURL(userId: userId)
-            pools = try await apiClient.get(url: url, headers: nil)
+            pools = try await apiClient.execute(with: PoolResource(userId: userId))
             logger.info("Pools fetched successfully")
         } catch {
             logger.error("Pools fetch failed with error: \(error)")

@@ -15,36 +15,36 @@ final class WaterStatusViewModel {
     var alkalinity = ""
     var temperature = ""
 
+    private(set) var isLoading = false
     private(set) var errorMessage: String?
 
-    let poolID: Int
-    private var waterStatusId: Int?
-
+    let poolId: Int
     private let apiClient: APIClient
-    private let urlProvider: URLProviding
+
+    private var waterStatusId: Int?
 
     private let logger = Logger(
         subsystem: "com.clear.pool.water.status",
         category: "WaterStatusViewModel"
     )
 
-    init(
-        poolID: Int,
-        apiClient: APIClient = NetworkManager(),
-        urlProvider: URLProviding = URLProvider()
-    ) {
-        self.poolID = poolID
-
+    init(poolId: Int, apiClient: APIClient = APIManager()) {
+        self.poolId = poolId
         self.apiClient = apiClient
-        self.urlProvider = urlProvider
     }
 
-    func fetch() async {
+    func fetchWaterStatus() async {
+        isLoading = true
+        defer { isLoading = false }
+
         do {
-            let url: URL = urlProvider.waterStatusURL(poolId: poolID)
-            let waterStatus: WaterStatus = try await apiClient.get(url: url, headers: nil)
+            let waterStatus: WaterStatus = try await apiClient.execute(
+                with: WaterStatusResource(poolId: poolId)
+            )
             waterStatusId = waterStatus.id
+
             updateFields(for: waterStatus)
+
             logger.info("Water status fetched successfully")
         } catch {
             errorMessage = "Unexpected Error!"
@@ -53,21 +53,23 @@ final class WaterStatusViewModel {
     }
 
     // TODO: Extract save to separate view model
-    func save() async {
+    func updateWaterStatus() async {
         guard let waterStatusId else {
             logger.error("WaterStatus ID must be set")
             return
         }
 
+        isLoading = true
+        defer { isLoading = false }
+
         do {
-            let url: URL = urlProvider.waterStatusURL(waterStatusId: waterStatusId)
             let body = createWaterStatus()
-            let waterStatus: WaterStatus = try await apiClient.put(
-                url: url,
-                body: body,
-                headers: nil
+            let waterStatus: WaterStatus = try await apiClient.execute(
+                with: WaterStatusResource(id: waterStatusId, method: .put, body: body)
             )
+
             updateFields(for: waterStatus)
+
             logger.info("Water status saved successfully")
         } catch {
             errorMessage = "Unexpected Error!"
@@ -87,18 +89,20 @@ final class WaterStatusViewModel {
             chlorine: chlorine,
             alkalinity: alkalinity,
             temperature: temperature,
-            pool: poolID
+            pool: poolId
         )
     }
 
     private func updateFields(for waterStatus: WaterStatus) {
-        ph = waterStatus.ph.formatted()
-        chlorine = waterStatus.chlorine.formatted()
-        if let newAlkalinity = waterStatus.alkalinity {
-            alkalinity = newAlkalinity.formatted()
-        }
-        if let newTemperature = waterStatus.temperature {
-            temperature = newTemperature.formatted()
+        withAnimation {
+            ph = waterStatus.ph.formatted()
+            chlorine = waterStatus.chlorine.formatted()
+            if let newAlkalinity = waterStatus.alkalinity {
+                alkalinity = newAlkalinity.formatted()
+            }
+            if let newTemperature = waterStatus.temperature {
+                temperature = newTemperature.formatted()
+            }
         }
     }
 }

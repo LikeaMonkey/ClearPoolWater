@@ -18,28 +18,28 @@ final class UpdatePoolStatusViewModel {
     var runPump = false
     var inspect = false
 
-    private let poolID: Int
+    private(set) var isLoading = false
+
+    private let poolId: Int
     private var poolStatusId: Int?
 
     private let apiClient: APIClient
-    private let urlProvider: URLProviding
 
-    init(
-        poolID: Int,
-        apiClient: APIClient = NetworkManager(),
-        urlProvider: URLProviding = URLProvider()
-    ) {
-        self.poolID = poolID
-
+    init(poolId: Int, apiClient: APIClient = APIManager()) {
+        self.poolId = poolId
         self.apiClient = apiClient
-        self.urlProvider = urlProvider
     }
 
-    func fetch() async {
+    func fetchPoolStatus() async {
+        isLoading = true
+        defer { isLoading = false }
+
         do {
-            let url: URL = urlProvider.poolStatusURL(poolId: poolID)
-            let poolStatus: PoolStatus = try await apiClient.get(url: url, headers: nil)
+            let poolStatus: PoolStatus = try await apiClient.execute(
+                with: PoolStatusResource(poolId: poolId)
+            )
             poolStatusId = poolStatus.id
+
             updateFields(for: poolStatus)
         } catch {
             assertionFailure("PoolStatusViewModel failed to fetch: \(error)")
@@ -47,26 +47,32 @@ final class UpdatePoolStatusViewModel {
     }
 
     private func updateFields(for poolStatus: PoolStatus) {
-        skim = DateUtils.isToday(poolStatus.skimDate)
-        vacuum = DateUtils.isToday(poolStatus.vacuumDate)
-        brush = DateUtils.isToday(poolStatus.brushDate)
-        emptyBaskets = DateUtils.isToday(poolStatus.emptyBasketsDate)
-        testWater = DateUtils.isToday(poolStatus.testWaterDate)
-        cleanFilter = DateUtils.isToday(poolStatus.cleanFilterDate)
-        runPump = DateUtils.isToday(poolStatus.runPumpDate)
-        inspect = DateUtils.isToday(poolStatus.inspectDate)
+        withAnimation {
+            skim = DateUtils.isToday(poolStatus.skimDate)
+            vacuum = DateUtils.isToday(poolStatus.vacuumDate)
+            brush = DateUtils.isToday(poolStatus.brushDate)
+            emptyBaskets = DateUtils.isToday(poolStatus.emptyBasketsDate)
+            testWater = DateUtils.isToday(poolStatus.testWaterDate)
+            cleanFilter = DateUtils.isToday(poolStatus.cleanFilterDate)
+            runPump = DateUtils.isToday(poolStatus.runPumpDate)
+            inspect = DateUtils.isToday(poolStatus.inspectDate)
+        }
     }
 
-    func save() async {
+    func updatePoolStatus() async {
         guard let poolStatusId else {
             assertionFailure("PoolStatus ID must be set before saving")
             return
         }
 
+        isLoading = true
+        defer { isLoading = false }
+
         do {
-            let url: URL = urlProvider.poolStatusURL(poolStatusId: poolStatusId)
             let body = createPoolStatus()
-            let _: PoolStatus = try await apiClient.put(url: url, body: body, headers: nil)
+            let _: PoolStatus = try await apiClient.execute(
+                with: PoolStatusResource(id: poolStatusId, method: .put, body: body)
+            )
         } catch {
             assertionFailure("PoolStatusViewModel failed to save: \(error)")
         }
@@ -82,7 +88,7 @@ final class UpdatePoolStatusViewModel {
             cleanFilter: cleanFilter,
             runPump: runPump,
             inspect: inspect,
-            pool: poolID
+            pool: poolId
         )
     }
 }

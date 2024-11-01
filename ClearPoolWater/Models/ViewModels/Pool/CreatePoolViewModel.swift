@@ -17,7 +17,6 @@ final class CreatePoolViewModel {
 
     private let authManager: AuthManaging
     private let apiClient: APIClient
-    private let urlProvider: URLProviding
 
     private let logger = Logger(
         subsystem: "com.clear.pool.water.create.pool",
@@ -26,12 +25,10 @@ final class CreatePoolViewModel {
 
     init(
         authManager: AuthManaging = AuthManager.shared,
-        apiClient: APIClient = NetworkManager(),
-        urlProvider: URLProviding = URLProvider()
+        apiClient: APIClient = APIManager()
     ) {
         self.authManager = authManager
         self.apiClient = apiClient
-        self.urlProvider = urlProvider
     }
 
     func addNewPool() async {
@@ -41,12 +38,8 @@ final class CreatePoolViewModel {
         }
 
         do {
-            let url: URL = urlProvider.poolsURL
-            let _: Pool = try await apiClient.post(
-                url: url,
-                body: createPool,
-                headers: nil
-            )
+            let poolResource = PoolResource(method: .post, body: createPool)
+            let _: Pool = try await apiClient.execute(with: poolResource)
             logger.info("Pool created successfully")
         } catch {
             logger.error("Pool creation failed with error: \(error)")

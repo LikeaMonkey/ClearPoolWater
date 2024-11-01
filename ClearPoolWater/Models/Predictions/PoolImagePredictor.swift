@@ -84,13 +84,13 @@ final class PoolImagePredictor: ImagePredictor {
             return
         }
 
-        let ImagePredictions = observations.map { observation in
+        let imagePredictions = observations.map { observation in
             ImagePrediction(
                 classification: observation.identifier,
                 confidencePercentage: observation.confidencePercentageString
             )
         }
 
-        continuation.resume(returning: ImagePredictions)
+        continuation.resume(returning: imagePredictions)
     }
 }

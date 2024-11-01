@@ -34,9 +34,10 @@ final class APIManager: APIClient {
         let request = try urlRequestBuilder.build(for: resource)
         let (data, response) = try await execute(request: request)
 
+        let decodedData: T = try decodeData(data)
+
         cache(response, data: data, for: resource.url)
 
-        let decodedData: T = try decodeData(data)
         return decodedData
     }
 

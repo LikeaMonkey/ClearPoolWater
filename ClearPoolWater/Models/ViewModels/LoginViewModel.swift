@@ -21,55 +21,42 @@ final class LoginViewModel {
 
     private let authManager: AuthManaging
     private let apiClient: APIClient
-    private let urlProvider: URLProviding
 
     init(
         authManager: AuthManaging = AuthManager.shared,
-        apiClient: APIClient = NetworkManager(),
-        urlProvider: URLProviding = URLProvider()
+        apiClient: APIClient = APIManager(urlRequestBuilder: URLRequestBuilder())
     ) {
         self.authManager = authManager
         self.apiClient = apiClient
-        self.urlProvider = urlProvider
     }
 
     func login() async {
         isLoading = true
+        defer { isLoading = false }
 
         do {
             try await sendLoginRequest()
         } catch {
             switch error {
-            case NetworkError.badStatusCode(let code):
+            case APIError.badStatusCode(let code):
                 errorMessage = "Bad status code \(code)!"
                 logger.error("Login failed with bad status code: \(code)")
             default:
                 errorMessage = "Unexpected error!"
                 logger.error(
-                    "Registration failed with an unexpected error: \(error.localizedDescription, privacy: .public)"
+                    "Login failed with an unexpected error: \(error.localizedDescription, privacy: .public)"
                 )
             }
         }
-
-        isLoading = false
     }
 
     private func sendLoginRequest() async throws {
-        let url = urlProvider.loginURL
-        let headers = ["Authorization": createBasicAuthentication()]
-        let userToken: UserToken = try await apiClient.post(url: url, headers: headers)
+        let loginResource = LoginResource(email: email, password: password)
+        let userToken: UserToken = try await apiClient.execute(with: loginResource)
 
-        authManager.login(with: userToken)
+        authManager.login(with: userToken.token)
 
         logger.info("Login successful")
-    }
-
-    private func createBasicAuthentication() -> String {
-        let loginString = String(format: "%@:%@", email, password)
-        let loginData = loginString.data(using: String.Encoding.utf8)!
-        let base64LoginString = loginData.base64EncodedString()
-
-        return "Basic \(base64LoginString)"
     }
 
     func handleSignInWithApple(_ result: Result<ASAuthorization, any Error>) {

@@ -19,30 +19,25 @@ final class RegisterViewModel {
     private(set) var success = false
 
     private let apiClient: APIClient
-    private let urlProvider: URLProviding
 
     private let logger = Logger(
         subsystem: "com.clear.pool.water.register",
         category: "RegisterViewModel"
     )
 
-    init(
-        apiClient: APIClient = NetworkManager(),
-        urlProvider: URLProviding = URLProvider()
-    ) {
+    init(apiClient: APIClient = APIManager(urlRequestBuilder: URLRequestBuilder())) {
         self.apiClient = apiClient
-        self.urlProvider = urlProvider
     }
 
     func register() async {
         isLoading = true
+        defer { isLoading = false }
 
         do {
             try await sendRegisterRequest()
-            success = true
         } catch {
             switch error {
-            case NetworkError.badStatusCode(let code):
+            case APIError.badStatusCode(let code):
                 errorMessage = "Bad status code \(code)!"
                 logger.error("Registration failed with bad status code: \(code)")
             default:
@@ -52,20 +47,21 @@ final class RegisterViewModel {
                 )
             }
         }
-
-        isLoading = false
     }
 
     private func sendRegisterRequest() async throws {
-        let url = urlProvider.registerURL
         let userCreate = User.Create(
             email: email,
             password: password,
             confirmPassword: confirmPassword,
             role: .user
         )
+        let user: User = try await apiClient.execute(
+            with: UsersResource(method: .post, body: userCreate)
+        )
 
-        let user: User = try await apiClient.post(url: url, body: userCreate, headers: nil)
+        success = true
+
         logger.info("Register user successfully: \(user.email, privacy: .private)")
     }
 }

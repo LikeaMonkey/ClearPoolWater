@@ -11,8 +11,8 @@ struct UpdateWaterStatusView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var viewModel: WaterStatusViewModel
 
-    init(poolID: Int) {
-        viewModel = WaterStatusViewModel(poolID: poolID)
+    init(poolId: Int) {
+        viewModel = WaterStatusViewModel(poolId: poolId)
     }
 
     var body: some View {
@@ -40,21 +40,27 @@ struct UpdateWaterStatusView: View {
         .navigationTitle("Update water status")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button("Cancel") {
+                    dismiss()
+                }
+            }
+
             ToolbarItem {
                 Button("Done") {
                     Task {
-                        await viewModel.save()
+                        await viewModel.updateWaterStatus()
                         dismiss()
                     }
                 }
             }
         }
         .task {
-            await viewModel.fetch()
+            await viewModel.fetchWaterStatus()
         }
     }
 }
 
 #Preview {
-    UpdateWaterStatusView(poolID: 1)
+    UpdateWaterStatusView(poolId: 1)
 }

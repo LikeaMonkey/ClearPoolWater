@@ -10,15 +10,24 @@ import SwiftUI
 struct PoolStatusSection: View {
     @State private var viewModel: PoolStatusViewModel
 
-    init(poolID: Int) {
-        viewModel = PoolStatusViewModel(poolID: poolID)
+    init(poolId: Int) {
+        viewModel = PoolStatusViewModel(poolId: poolId)
     }
 
     var body: some View {
-        VStack(alignment: .leading) {
-            Text("Pool status")
-                .font(.headline)
-                .padding(.bottom, 10)
+        VStack(alignment: .leading, spacing: 20) {
+            HStack {
+                Text("Pool traits")
+                    .font(.headline)
+
+                Spacer()
+
+                UpdatePoolStatusButton(poolId: viewModel.poolId) {
+                    Task {
+                        await viewModel.fetchPoolStatus()
+                    }
+                }
+            }
 
             PoolInfoRow(title: "Skim", value: viewModel.skimDate)
             PoolInfoRow(title: "Vacuum", value: viewModel.vacuumDate)
@@ -28,22 +37,16 @@ struct PoolStatusSection: View {
             PoolInfoRow(title: "Clean Filter", value: viewModel.cleanFilterDate)
             PoolInfoRow(title: "Run Pump", value: viewModel.runPumpDate)
             PoolInfoRow(title: "Inspect", value: viewModel.inspectDate)
-
-            UpdatePoolStatusButton(poolID: viewModel.poolID) {
-                Task {
-                    await viewModel.fetch()
-                }
-            }
         }
         .padding()
         .background(.regularMaterial)
         .cornerRadius(10)
         .task {
-            await viewModel.fetch()
+            await viewModel.fetchPoolStatus()
         }
     }
 }
 
 #Preview {
-    PoolStatusSection(poolID: 1)
+    PoolStatusSection(poolId: 1)
 }

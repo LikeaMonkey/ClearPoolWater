@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct UpdatePoolStatusButton: View {
-    let poolID: Int
+    let poolId: Int
     let onUpdatePoolStatusDisappear: (() -> Void)?
 
     @State private var isPoolStatusSheetPresented = false
@@ -17,16 +17,15 @@ struct UpdatePoolStatusButton: View {
         Button {
             isPoolStatusSheetPresented.toggle()
         } label: {
-            Text("Update pool status")
+            Text("Update")
                 .frame(maxWidth: .infinity)
         }
-        .controlSize(.large)
-        .buttonStyle(.borderedProminent)
+        .buttonStyle(.bordered)
         .sheet(isPresented: $isPoolStatusSheetPresented) {
             NavigationView {
-                UpdatePoolStatusView(poolID: poolID)
+                UpdatePoolStatusView(poolId: poolId)
             }
-            //            .presentationDetents([.medium])
+            //.presentationDetents([.medium])
             .onDisappear {
                 onUpdatePoolStatusDisappear?()
             }
@@ -35,5 +34,5 @@ struct UpdatePoolStatusButton: View {
 }
 
 #Preview {
-    UpdatePoolStatusButton(poolID: 1) {}
+    UpdatePoolStatusButton(poolId: 1) {}
 }

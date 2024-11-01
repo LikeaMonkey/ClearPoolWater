@@ -10,36 +10,39 @@ import SwiftUI
 struct PoolWaterStatusSection: View {
     @State private var viewModel: WaterStatusViewModel
 
-    init(poolID: Int) {
-        viewModel = WaterStatusViewModel(poolID: poolID)
+    init(poolId: Int) {
+        viewModel = WaterStatusViewModel(poolId: poolId)
     }
 
     var body: some View {
-        VStack(alignment: .leading) {
-            Text("Water traits")
-                .font(.headline)
-                .padding(.bottom, 10)
+        VStack(alignment: .leading, spacing: 20) {
+            HStack {
+                Text("Water traits")
+                    .font(.headline)
 
-            PoolInfoRow(title: "Ph: ", value: viewModel.ph)
-            PoolInfoRow(title: "Chlorine: ", value: viewModel.chlorine)
-            PoolInfoRow(title: "Alkalinity: ", value: viewModel.alkalinity)
-            PoolInfoRow(title: "Temperature: ", value: viewModel.temperature)
+                Spacer()
 
-            UpdateWaterStatusButton(poolID: viewModel.poolID) {
-                Task {
-                    await viewModel.fetch()
+                UpdateWaterStatusButton(poolId: viewModel.poolId) {
+                    Task {
+                        await viewModel.fetchWaterStatus()
+                    }
                 }
+            }
+
+            HStack {
+                WaterParameterView(title: "pH", subtitle: viewModel.ph)
+                WaterParameterView(title: "Cl", subtitle: viewModel.chlorine)
+                WaterParameterView(title: "Alkal", subtitle: viewModel.alkalinity)
+                WaterParameterView(title: "Temp", subtitle: viewModel.temperature)
             }
         }
         .padding()
-        .background(.regularMaterial)
-        .cornerRadius(10)
         .task {
-            await viewModel.fetch()
+            await viewModel.fetchWaterStatus()
         }
     }
 }
 
 #Preview {
-    PoolWaterStatusSection(poolID: 1)
+    PoolWaterStatusSection(poolId: 1)
 }

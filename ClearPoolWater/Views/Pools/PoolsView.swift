@@ -24,14 +24,15 @@ struct PoolsView: View {
         }
         .navigationTitle("Pools")
         .toolbar {
+            //TODO: Should I add it to ToolbarItem here
             CreatePoolButton {
                 Task {
-                    await viewModel.fetch()
+                    await viewModel.fetchPools()
                 }
             }
         }
         .task {
-            await viewModel.fetch()
+            await viewModel.fetchPools()
         }
     }
 }

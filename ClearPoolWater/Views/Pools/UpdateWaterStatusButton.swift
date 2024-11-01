@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct UpdateWaterStatusButton: View {
-    let poolID: Int
+    let poolId: Int
     let onUpdateWaterStatusDisappear: (() -> Void)?
 
     @State private var isWaterStatusSheetPresented = false
@@ -17,14 +17,12 @@ struct UpdateWaterStatusButton: View {
         Button {
             isWaterStatusSheetPresented.toggle()
         } label: {
-            Text("Update water status")
-                .frame(maxWidth: .infinity)
+            Text("Update")
         }
-        .controlSize(.large)
-        .buttonStyle(.borderedProminent)
+        .buttonStyle(.bordered)
         .sheet(isPresented: $isWaterStatusSheetPresented) {
             NavigationView {
-                UpdateWaterStatusView(poolID: poolID)
+                UpdateWaterStatusView(poolId: poolId)
             }
             .presentationDetents([.medium])
             .onDisappear {
@@ -35,5 +33,5 @@ struct UpdateWaterStatusButton: View {
 }
 
 #Preview {
-    UpdateWaterStatusButton(poolID: 1) {}
+    UpdateWaterStatusButton(poolId: 1) {}
 }

@@ -16,14 +16,19 @@ struct PoolDetail: View {
                 PoolInfoSection(pool: pool)
 
                 // TODO: Can we crash here
-                PoolWaterStatusSection(poolID: pool.id!)
+                PoolWaterStatusSection(poolId: pool.id!)
 
-                PoolStatusSection(poolID: pool.id!)
+                PoolStatusSection(poolId: pool.id!)
             }
             .navigationTitle(pool.name)
             .padding()
         }
         .navigationTitle(pool.name)
+        .toolbar {
+            NavigationLink(destination: PoolTasksView(poolId: pool.id!)) {
+                Image(systemName: "list.bullet.clipboard")
+            }
+        }
     }
 }
 

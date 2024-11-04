@@ -10,9 +10,9 @@ import SwiftUI
 
 @Observable
 final class PoolTasksViewModel {
-    var cleaningTasks = [String]()
-    var maintenanceTasks = [String]()
-    var testingTasks = [String]()
+    var cleaningTasks = [PoolTask]()
+    var maintenanceTasks = [PoolTask]()
+    var testingTasks = [PoolTask]()
 
     private(set) var isLoading = false
     private(set) var errorMessage: String?
@@ -59,16 +59,16 @@ final class PoolTasksViewModel {
         maintenanceTasks =
             tasks
             .filter { $0.type == .maintenance }
-            .map { "Code: \($0.code) - Priority: \($0.priority)" }
+            .sorted { $0.priority > $1.priority }
 
         cleaningTasks =
             tasks
             .filter { $0.type == .cleaning }
-            .map { "Code: \($0.code) - Priority: \($0.priority)" }
+            .sorted { $0.priority > $1.priority }
 
         testingTasks =
             tasks
             .filter { $0.type == .testing }
-            .map { "Code: \($0.code) - Priority: \($0.priority)" }
+            .sorted { $0.priority > $1.priority }
     }
 }

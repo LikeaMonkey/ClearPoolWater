@@ -10,18 +10,20 @@ import SwiftUI
 
 @Observable
 final class WaterStatusViewModel {
-    var ph = ""
-    var chlorine = ""
-    var alkalinity = ""
-    var temperature = ""
+    var ph: Double?
+    var chlorine: Double?
+    var alkalinity: Double?
+    var temperature: Double?
+
+    var isLoaded: Bool { waterStatusId != nil }
 
     private(set) var isLoading = false
     private(set) var errorMessage: String?
 
     let poolId: Int
-    private let apiClient: APIClient
+    var waterStatusId: Int?
 
-    private var waterStatusId: Int?
+    private let apiClient: APIClient
 
     private let logger = Logger(
         subsystem: "com.clear.pool.water.status",
@@ -52,57 +54,10 @@ final class WaterStatusViewModel {
         }
     }
 
-    // TODO: Extract save to separate view model
-    func updateWaterStatus() async {
-        guard let waterStatusId else {
-            logger.error("WaterStatus ID must be set")
-            return
-        }
-
-        isLoading = true
-        defer { isLoading = false }
-
-        do {
-            let body = createWaterStatus()
-            let waterStatus: WaterStatus = try await apiClient.execute(
-                with: WaterStatusResource(id: waterStatusId, method: .put, body: body)
-            )
-
-            updateFields(for: waterStatus)
-
-            logger.info("Water status saved successfully")
-        } catch {
-            errorMessage = "Unexpected Error!"
-            logger.error("Water status save failed with error \(error.localizedDescription)")
-        }
-    }
-
-    private func createWaterStatus() -> WaterStatus.Create {
-        let formatter = DecimalFormatter()
-        let ph = formatter.double(from: ph) ?? 0
-        let chlorine = formatter.double(from: chlorine) ?? 0
-        let alkalinity = alkalinity.isEmpty ? nil : Double(alkalinity)
-        let temperature = temperature.isEmpty ? nil : Double(temperature)
-
-        return WaterStatus.Create(
-            ph: ph,
-            chlorine: chlorine,
-            alkalinity: alkalinity,
-            temperature: temperature,
-            pool: poolId
-        )
-    }
-
     private func updateFields(for waterStatus: WaterStatus) {
-        withAnimation {
-            ph = waterStatus.ph.formatted()
-            chlorine = waterStatus.chlorine.formatted()
-            if let newAlkalinity = waterStatus.alkalinity {
-                alkalinity = newAlkalinity.formatted()
-            }
-            if let newTemperature = waterStatus.temperature {
-                temperature = newTemperature.formatted()
-            }
-        }
+        ph = waterStatus.ph
+        chlorine = waterStatus.chlorine
+        alkalinity = waterStatus.alkalinity
+        temperature = waterStatus.temperature
     }
 }

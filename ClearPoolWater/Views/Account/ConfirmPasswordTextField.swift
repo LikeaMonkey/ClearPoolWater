@@ -19,6 +19,5 @@ struct ConfirmPasswordTextField: View {
 }
 
 #Preview {
-    let password: Binding<String> = .constant("")
-    ConfirmPasswordTextField(password: password)
+    ConfirmPasswordTextField(password: .constant(""))
 }

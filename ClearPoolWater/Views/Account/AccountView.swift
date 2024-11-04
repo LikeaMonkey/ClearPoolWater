@@ -15,6 +15,12 @@ struct AccountView: View {
             Text(model.user?.email ?? "No email")
             Text(model.user?.role.rawValue ?? "No role")
 
+            #if DEBUG
+                Button("DEBUG: Clean URL Cache") {
+                    URLCache.shared.removeAllCachedResponses()
+                }
+            #endif
+
             Button {
                 AuthManager.shared.logout()
             } label: {

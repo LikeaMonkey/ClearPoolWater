@@ -9,20 +9,20 @@ import SwiftUI
 
 struct UpdateWaterStatusButton: View {
     let poolId: Int
+    let waterStatusId: Int?
     let onUpdateWaterStatusDisappear: (() -> Void)?
 
     @State private var isWaterStatusSheetPresented = false
 
     var body: some View {
-        Button {
+        Button("Update") {
             isWaterStatusSheetPresented.toggle()
-        } label: {
-            Text("Update")
         }
+        .disabled(waterStatusId == nil)
         .buttonStyle(.bordered)
         .sheet(isPresented: $isWaterStatusSheetPresented) {
             NavigationView {
-                UpdateWaterStatusView(poolId: poolId)
+                UpdateWaterStatusView(poolId: poolId, waterStatusId: waterStatusId!)
             }
             .presentationDetents([.medium])
             .onDisappear {
@@ -33,5 +33,5 @@ struct UpdateWaterStatusButton: View {
 }
 
 #Preview {
-    UpdateWaterStatusButton(poolId: 1) {}
+    UpdateWaterStatusButton(poolId: 1, waterStatusId: 1) {}
 }

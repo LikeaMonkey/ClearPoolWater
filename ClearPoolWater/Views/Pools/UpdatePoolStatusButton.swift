@@ -14,18 +14,14 @@ struct UpdatePoolStatusButton: View {
     @State private var isPoolStatusSheetPresented = false
 
     var body: some View {
-        Button {
+        Button("Update") {
             isPoolStatusSheetPresented.toggle()
-        } label: {
-            Text("Update")
-                .frame(maxWidth: .infinity)
         }
         .buttonStyle(.bordered)
         .sheet(isPresented: $isPoolStatusSheetPresented) {
             NavigationView {
                 UpdatePoolStatusView(poolId: poolId)
             }
-            //.presentationDetents([.medium])
             .onDisappear {
                 onUpdatePoolStatusDisappear?()
             }

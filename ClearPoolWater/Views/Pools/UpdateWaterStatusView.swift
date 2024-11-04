@@ -9,33 +9,37 @@ import SwiftUI
 
 struct UpdateWaterStatusView: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var viewModel: WaterStatusViewModel
+    @State private var viewModel: UpdateWaterStatusViewModel
 
-    init(poolId: Int) {
-        viewModel = WaterStatusViewModel(poolId: poolId)
+    init(poolId: Int, waterStatusId: Int) {
+        viewModel = UpdateWaterStatusViewModel(
+            poolId: poolId,
+            waterStatusId: waterStatusId
+        )
     }
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 15) {
-                TitledView(title: "Ph: ") {
-                    TextField("Ph", text: $viewModel.ph)
-                        .textFieldStyle(.roundedBorder)
+            if viewModel.isLoading {
+                ProgressView()
+                    .frame(alignment: .center)
+            } else {
+                VStack(spacing: 15) {
+                    TitledView(title: "pH") {
+                        SliderTextFieldView(value: $viewModel.ph, range: 0...14, step: 0.1)
+                    }
+                    TitledView(title: "Chlorine") {
+                        SliderTextFieldView(value: $viewModel.chlorine, range: 0...15, step: 0.1)
+                    }
+                    TitledView(title: "Alkalinity") {
+                        SliderTextFieldView(value: $viewModel.alkalinity, range: 0...300, step: 10)
+                    }
+                    TitledView(title: "Temperature") {
+                        SliderTextFieldView(value: $viewModel.temperature, range: 0...50, step: 0.5)
+                    }
                 }
-                TitledView(title: "Chlorine: ") {
-                    TextField("Chlorine", text: $viewModel.chlorine)
-                        .textFieldStyle(.roundedBorder)
-                }
-                TitledView(title: "Alkalinity: ") {
-                    TextField("Alkalinity", text: $viewModel.alkalinity)
-                        .textFieldStyle(.roundedBorder)
-                }
-                TitledView(title: "Temperature: ") {
-                    TextField("Temperature", text: $viewModel.temperature)
-                        .textFieldStyle(.roundedBorder)
-                }
+                .padding(.horizontal, 20)
             }
-            .padding(.horizontal, 20)
         }
         .navigationTitle("Update water status")
         .navigationBarTitleDisplayMode(.inline)
@@ -62,5 +66,5 @@ struct UpdateWaterStatusView: View {
 }
 
 #Preview {
-    UpdateWaterStatusView(poolId: 1)
+    UpdateWaterStatusView(poolId: 1, waterStatusId: 1)
 }

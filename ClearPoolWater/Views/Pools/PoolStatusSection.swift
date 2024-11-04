@@ -16,18 +16,7 @@ struct PoolStatusSection: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
-            HStack {
-                Text("Pool traits")
-                    .font(.headline)
-
-                Spacer()
-
-                UpdatePoolStatusButton(poolId: viewModel.poolId) {
-                    Task {
-                        await viewModel.fetchPoolStatus()
-                    }
-                }
-            }
+            header
 
             PoolInfoRow(title: "Skim", value: viewModel.skimDate)
             PoolInfoRow(title: "Vacuum", value: viewModel.vacuumDate)
@@ -43,6 +32,21 @@ struct PoolStatusSection: View {
         .cornerRadius(10)
         .task {
             await viewModel.fetchPoolStatus()
+        }
+    }
+
+    private var header: some View {
+        HStack {
+            Text("Pool Traits")
+                .font(.headline)
+
+            Spacer()
+
+            UpdatePoolStatusButton(poolId: viewModel.poolId) {
+                Task {
+                    await viewModel.fetchPoolStatus()
+                }
+            }
         }
     }
 }

@@ -71,6 +71,8 @@ final class AuthManager: AuthManaging {
 
         userToken = nil
 
+        deleteTokenFromKeychain()
+
         isLoggedIn = false
     }
 
@@ -86,5 +88,13 @@ final class AuthManager: AuthManaging {
 
     private func loadTokenFromKeychain() -> String? {
         KeychainManager.shared.getToken(forKey: KeychainKeys.token)
+    }
+
+    private func deleteTokenFromKeychain() {
+        do {
+            try KeychainManager.shared.deleteToken(forKey: KeychainKeys.token)
+        } catch {
+            assertionFailure("Failed to delete token from keychain: \(error)")
+        }
     }
 }

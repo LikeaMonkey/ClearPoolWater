@@ -35,7 +35,7 @@ struct PoolCard: View {
             }
         }
         .padding(20)
-        .background(.pool)
+        .background(.regularMaterial)
         .cornerRadius(10)
     }
 }

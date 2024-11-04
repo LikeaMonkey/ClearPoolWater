@@ -56,21 +56,19 @@ final class PoolTasksViewModel {
     }
 
     private func updateFields(with tasks: [PoolTask]) {
-        withAnimation {
-            maintenanceTasks =
-                tasks
-                .filter { $0.type == .maintenance }
-                .map { "Code: \($0.code) - Priority: \($0.priority)" }
+        maintenanceTasks =
+            tasks
+            .filter { $0.type == .maintenance }
+            .map { "Code: \($0.code) - Priority: \($0.priority)" }
 
-            cleaningTasks =
-                tasks
-                .filter { $0.type == .cleaning }
-                .map { "Code: \($0.code) - Priority: \($0.priority)" }
+        cleaningTasks =
+            tasks
+            .filter { $0.type == .cleaning }
+            .map { "Code: \($0.code) - Priority: \($0.priority)" }
 
-            testingTasks =
-                tasks
-                .filter { $0.type == .testing }
-                .map { "Code: \($0.code) - Priority: \($0.priority)" }
-        }
+        testingTasks =
+            tasks
+            .filter { $0.type == .testing }
+            .map { "Code: \($0.code) - Priority: \($0.priority)" }
     }
 }

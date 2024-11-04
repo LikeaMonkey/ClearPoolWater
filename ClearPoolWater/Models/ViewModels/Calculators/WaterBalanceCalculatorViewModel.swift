@@ -30,9 +30,7 @@ final class WaterBalanceCalculatorViewModel {
                 targetValue: targetValue
             )
 
-            withAnimation {
-                result = amount
-            }
+            result = amount
         } catch {
             assertionFailure(error.localizedDescription)
         }

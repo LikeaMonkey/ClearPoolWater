@@ -53,15 +53,13 @@ final class PoolStatusViewModel {
     }
 
     private func updateFields(for poolStatus: PoolStatus) {
-        withAnimation {
-            skimDate = DateUtils.formatDate(poolStatus.skimDate)
-            vacuumDate = DateUtils.formatDate(poolStatus.vacuumDate)
-            brushDate = DateUtils.formatDate(poolStatus.brushDate)
-            emptyBasketsDate = DateUtils.formatDate(poolStatus.emptyBasketsDate)
-            testWaterDate = DateUtils.formatDate(poolStatus.testWaterDate)
-            cleanFilterDate = DateUtils.formatDate(poolStatus.cleanFilterDate)
-            runPumpDate = DateUtils.formatDate(poolStatus.runPumpDate)
-            inspectDate = DateUtils.formatDate(poolStatus.inspectDate)
-        }
+        skimDate = DateUtils.formatDate(poolStatus.skimDate)
+        vacuumDate = DateUtils.formatDate(poolStatus.vacuumDate)
+        brushDate = DateUtils.formatDate(poolStatus.brushDate)
+        emptyBasketsDate = DateUtils.formatDate(poolStatus.emptyBasketsDate)
+        testWaterDate = DateUtils.formatDate(poolStatus.testWaterDate)
+        cleanFilterDate = DateUtils.formatDate(poolStatus.cleanFilterDate)
+        runPumpDate = DateUtils.formatDate(poolStatus.runPumpDate)
+        inspectDate = DateUtils.formatDate(poolStatus.inspectDate)
     }
 }

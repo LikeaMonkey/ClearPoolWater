@@ -23,6 +23,5 @@ struct EmailTextField: View {
 }
 
 #Preview {
-    let email: Binding<String> = .constant("")
-    EmailTextField(email: email)
+    EmailTextField(email: .constant(""))
 }

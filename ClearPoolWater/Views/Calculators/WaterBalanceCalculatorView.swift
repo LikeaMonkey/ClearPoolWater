@@ -13,51 +13,57 @@ struct WaterBalanceCalculatorView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                WaterTraitSlider(
-                    value: $model.poolVolume,
-                    range: 0...150,
-                    step: 0.5,
-                    title: "Pool Volume: "
-                )
-
-                Divider()
-
-                VStack {
-                    WaterTraitSlider(
-                        value: $model.currentValue,
-                        range: 0...14,
-                        step: 0.1,
-                        title: "Current pH: "
-                    )
-                    WaterTraitSlider(
-                        value: $model.targetValue,
-                        range: 0...14,
-                        step: 0.1,
-                        title: "Target pH: "
+                TitledView(title: "Pool Volume") {
+                    SliderTextFieldView(
+                        value: $model.poolVolume,
+                        range: 0...150,
+                        step: 0.5
                     )
                 }
 
                 Divider()
 
                 VStack {
-                    WaterTraitSlider(
-                        value: $model.dosage.amount,
-                        range: 10...1000,
-                        step: 10,
-                        title: "Dosage amount: "
-                    )
-                    WaterTraitSlider(
-                        value: $model.dosage.volume,
-                        range: 1...100,
-                        step: 0.5,
-                        title: "Dosage volume: "
-                    )
-                    WaterTraitSlider(
-                        value: $model.dosage.increasedValue,
-                        range: 0...1,
-                        step: 0.1,
-                        title: "Dosage value: "
-                    )
+                    TitledView(title: "Current pH") {
+                        SliderTextFieldView(
+                            value: $model.currentValue,
+                            range: 0...14,
+                            step: 0.1
+                        )
+                    }
+                    TitledView(title: "Target pH") {
+                        SliderTextFieldView(
+                            value: $model.targetValue,
+                            range: 0...14,
+                            step: 0.1
+                        )
+                    }
+                }
+
+                Divider()
+
+                VStack {
+                    TitledView(title: "Dosage amount") {
+                        SliderTextFieldView(
+                            value: $model.dosage.amount,
+                            range: 10...1000,
+                            step: 10
+                        )
+                    }
+                    TitledView(title: "Dosage volume") {
+                        SliderTextFieldView(
+                            value: $model.dosage.volume,
+                            range: 1...100,
+                            step: 0.5
+                        )
+                    }
+                    TitledView(title: "Dosage value") {
+                        SliderTextFieldView(
+                            value: $model.dosage.increasedValue,
+                            range: -1...1,
+                            step: 0.1
+                        )
+                    }
                 }
 
                 Button("Calculate") {

@@ -17,7 +17,6 @@ struct UpdatePoolStatusButton: View {
         Button("Update") {
             isPoolStatusSheetPresented.toggle()
         }
-        .buttonStyle(.bordered)
         .sheet(isPresented: $isPoolStatusSheetPresented) {
             NavigationView {
                 UpdatePoolStatusView(poolId: poolId)

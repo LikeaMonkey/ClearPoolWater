@@ -17,7 +17,7 @@ struct PoolWaterStatusSection: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             HStack {
-                Text("Water traits")
+                Text("Water Balance")
                     .font(.headline)
 
                 Spacer()
@@ -67,7 +67,9 @@ struct PoolWaterStatusSection: View {
                 }
             }
         }
-        .padding()
+        .padding(20)
+        .background(.regularMaterial)
+        .cornerRadius(10)
         .task {
             await viewModel.fetchWaterStatus()
         }

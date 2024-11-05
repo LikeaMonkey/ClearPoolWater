@@ -15,8 +15,9 @@ struct PoolStatusSection: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading, spacing: 12) {
             header
+                .padding(.bottom, 8)
 
             PoolInfoRow(title: "Skim", value: viewModel.skimDate)
             PoolInfoRow(title: "Vacuum", value: viewModel.vacuumDate)
@@ -27,7 +28,7 @@ struct PoolStatusSection: View {
             PoolInfoRow(title: "Run Pump", value: viewModel.runPumpDate)
             PoolInfoRow(title: "Inspect", value: viewModel.inspectDate)
         }
-        .padding()
+        .padding(20)
         .background(.regularMaterial)
         .cornerRadius(10)
         .task {
@@ -37,7 +38,7 @@ struct PoolStatusSection: View {
 
     private var header: some View {
         HStack {
-            Text("Pool Traits")
+            Text("Maintenance")
                 .font(.headline)
 
             Spacer()

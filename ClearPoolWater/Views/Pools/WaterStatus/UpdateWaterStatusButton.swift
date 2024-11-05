@@ -19,7 +19,6 @@ struct UpdateWaterStatusButton: View {
             isWaterStatusSheetPresented.toggle()
         }
         .disabled(waterStatusId == nil)
-        .buttonStyle(.bordered)
         .sheet(isPresented: $isWaterStatusSheetPresented) {
             NavigationView {
                 UpdateWaterStatusView(poolId: poolId, waterStatusId: waterStatusId!)

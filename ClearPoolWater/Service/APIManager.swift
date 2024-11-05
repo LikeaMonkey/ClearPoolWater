@@ -92,9 +92,4 @@ final class APIManager: APIClient {
         let request = URLRequest(url: url)
         urlCache.storeCachedResponse(cachedResponse, for: request)
     }
-
-    private func invalidateCache(for url: URL) {
-        let request = URLRequest(url: url)
-        urlCache.removeCachedResponse(for: request)
-    }
 }

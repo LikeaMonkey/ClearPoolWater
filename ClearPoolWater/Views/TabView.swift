@@ -36,7 +36,9 @@ struct PoolTabView: View {
             }
 
             Tab("Account", systemImage: "person.crop.circle.fill") {
-                AccountView()
+                NavigationStack {
+                    AccountView()
+                }
             }
         }
     }

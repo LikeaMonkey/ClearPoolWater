@@ -8,32 +8,27 @@
 import SwiftUI
 
 struct AccountView: View {
-    @Environment(Model.self) private var model
+    @State private var viewModel = AccountViewModel()
 
     var body: some View {
-        VStack(spacing: 15) {
-            Text(model.user?.email ?? "No email")
-            Text(model.user?.role.rawValue ?? "No role")
-
-            #if DEBUG
-                Button("DEBUG: Clean URL Cache") {
-                    URLCache.shared.removeAllCachedResponses()
-                }
-            #endif
-
-            Button {
-                AuthManager.shared.logout()
-            } label: {
-                Text("Logout")
-                    .frame(maxWidth: .infinity)
+        VStack(alignment: .leading) {
+            if viewModel.isLoading {
+                ProgressView()
+            } else {
+                AccountInfoView(
+                    email: viewModel.user?.email ?? "-",
+                    role: viewModel.user?.role ?? .user
+                )
+                AccountSettingsView()
             }
-            .buttonStyle(.borderedProminent)
         }
-        .padding(40)
+        .navigationTitle("Account")
+        .task {
+            await viewModel.fetchAccount()
+        }
     }
 }
 
 #Preview {
     AccountView()
-        .environment(Model())
 }

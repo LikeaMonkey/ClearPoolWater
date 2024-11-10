@@ -87,7 +87,7 @@ final class PoolImagePredictor: ImagePredictor {
         let imagePredictions = observations.map { observation in
             ImagePrediction(
                 classification: observation.identifier,
-                confidencePercentage: observation.confidencePercentageString
+                confidence: observation.confidence
             )
         }
 

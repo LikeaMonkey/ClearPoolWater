@@ -6,7 +6,11 @@
 //
 
 /// Stores a classification name and confidence for an image classifier's prediction.
-struct ImagePrediction {
+struct ImagePrediction: Hashable {
     let classification: String
-    let confidencePercentage: String
+    let confidence: Float
+
+    var confidencePercentageString: String {
+        String(format: "%.2f", confidence * 100)
+    }
 }

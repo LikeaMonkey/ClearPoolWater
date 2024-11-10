@@ -10,11 +10,6 @@ import OSLog
 import PhotosUI
 import SwiftUI
 
-struct PoolPrediction: Hashable {
-    var result: String
-    var confidence: String
-}
-
 @Observable
 final class PoolPredictionViewModel {
     var selectedPhoto: PhotosPickerItem? {
@@ -27,7 +22,7 @@ final class PoolPredictionViewModel {
     }
 
     var poolImage: Image?
-    var resultPredictions: [PoolPrediction] = []
+    var resultPredictions: [ImagePrediction] = []
 
     private(set) var isLoading = false
     var isPredictionPossible: Bool { selectedPhoto != nil && !isLoading }
@@ -56,13 +51,7 @@ final class PoolPredictionViewModel {
 
         do {
             let predictions = try await poolImagePredictor.makePredictions(for: imagePhoto)
-
-            resultPredictions = predictions.map {
-                PoolPrediction(
-                    result: $0.classification,
-                    confidence: $0.confidencePercentage
-                )
-            }
+            resultPredictions = predictions.filter { $0.confidence > 0.05 }
         } catch {
             logger.error("Failed to make predictions for photo: \(error)")
         }

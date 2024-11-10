@@ -7,37 +7,34 @@
 
 import SwiftUI
 
-//enum PoolTab: Hashable {
-//    case pools
-//    case calculator
-//    case photo
-//    case account
-//}
-
 struct PoolTabView: View {
-    // @State private var selectedTab = PoolTab.pools
-
     var body: some View {
         TabView {
             Tab("Pools", systemImage: "figure.pool.swim.circle") {
                 NavigationStack {
                     PoolsView()
+                        .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
                 }
+                .toolbarBackground(Color.poolBottomColor, for: .tabBar)
             }
 
             Tab("Calculator", systemImage: "plus.forwardslash.minus") {
                 NavigationStack {
                     WaterBalanceCalculatorView()
+                        .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
                 }
+                .toolbarBackground(Color.poolBottomColor, for: .tabBar)
             }
 
-            Tab("Photo", systemImage: "photo") {
-                PoolPredictionView()
+            Tab("Prediction", systemImage: "photo") {
+                PredictionView()
+                    .toolbarBackground(Color.poolBottomColor, for: .tabBar)
             }
 
             Tab("Account", systemImage: "person.crop.circle.fill") {
                 NavigationStack {
                     AccountView()
+                        .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
                 }
             }
         }

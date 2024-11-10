@@ -11,31 +11,35 @@ struct WaterBalanceCalculatorView: View {
     @State private var model = WaterBalanceCalculatorViewModel()
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                PoolVolumeSection(poolVolumeValue: $model.poolVolume)
+        ZStack {
+            BackgroundView()
 
-                Divider()
+            ScrollView {
+                VStack(spacing: 20) {
+                    PoolVolumeSection(poolVolumeValue: $model.poolVolume)
 
-                AdjustmentSection(
-                    currentValue: $model.currentValue,
-                    targetValue: $model.targetValue
-                )
+                    Divider()
 
-                Divider()
+                    AdjustmentSection(
+                        currentValue: $model.currentValue,
+                        targetValue: $model.targetValue
+                    )
 
-                DosageSection(dosage: $model.dosage)
+                    Divider()
 
-                Button("Calculate") {
-                    model.calculate()
+                    DosageSection(dosage: $model.dosage)
+
+                    Button("Calculate") {
+                        model.calculate()
+                    }
+                    .buttonStyle(.borderedProminent)
+
+                    Divider()
+
+                    CalculatorResultView(resultValue: model.result)
                 }
-                .buttonStyle(.borderedProminent)
-
-                Divider()
-
-                CalculatorResultView(resultValue: model.result)
+                .padding()
             }
-            .padding()
         }
         .navigationTitle("Calculator")
     }

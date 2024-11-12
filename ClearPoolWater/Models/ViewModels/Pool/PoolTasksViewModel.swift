@@ -14,8 +14,7 @@ final class PoolTasksViewModel {
     var maintenanceTasks = [PoolTask]()
     var testingTasks = [PoolTask]()
 
-    private(set) var isLoading = false
-    private(set) var errorMessage: String?
+    private(set) var state = ViewState.loading
 
     let poolId: Int
 
@@ -38,24 +37,29 @@ final class PoolTasksViewModel {
     }
 
     func fetchPoolTasks() async {
-        isLoading = true
-        defer { isLoading = false }
+        state = .loading
 
         do {
-            let tasks: [PoolTask] = try await apiClient.execute(
-                with: PoolTasksResource(poolId: poolId)
-            )
-
-            updateFields(with: tasks)
-
-            logger.info("Pool tasks fetched successfully")
-            logger.info("Pool tasks \(tasks)")
+            try await performFetchPoolTasksRequest()
         } catch {
-            logger.error("Pool tasks fetching failed with error: \(error)")
+            handleError(error)
         }
     }
 
-    private func updateFields(with tasks: [PoolTask]) {
+    private func performFetchPoolTasksRequest() async throws {
+        let tasks: [PoolTask] = try await apiClient.execute(
+            with: PoolTasksResource(poolId: poolId)
+        )
+
+        updateTasks(tasks)
+
+        state = .success
+
+        logger.info("Pool tasks fetched successfully")
+        logger.debug("Pool tasks \(tasks)")
+    }
+
+    private func updateTasks(_ tasks: [PoolTask]) {
         maintenanceTasks =
             tasks
             .filter { $0.type == .maintenance }
@@ -70,5 +74,13 @@ final class PoolTasksViewModel {
             tasks
             .filter { $0.type == .testing }
             .sorted { $0.priority > $1.priority }
+    }
+
+    private func handleError(_ error: Error) {
+        state = .failure
+
+        logger.error(
+            "Pool tasks fetching failed with error: \(error.localizedDescription)"
+        )
     }
 }

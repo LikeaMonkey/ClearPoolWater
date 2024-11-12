@@ -26,13 +26,13 @@ final class PoolsViewModel {
     }
 
     func fetchPools() async {
-        guard let userId = authManager.userId else {
-            logger.error("User ID is not set")
+        guard authManager.isLoggedIn else {
+            logger.error("User must be logged in")
             return
         }
 
         do {
-            pools = try await apiClient.execute(with: PoolResource(userId: userId))
+            pools = try await apiClient.execute(with: PoolResource())
             logger.info("Pools fetched successfully")
         } catch {
             logger.error("Pools fetch failed with error: \(error)")

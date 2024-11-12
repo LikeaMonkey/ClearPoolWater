@@ -47,10 +47,11 @@ final class CreatePoolViewModel {
     }
 
     private func createPool() -> Pool.Create? {
-        guard let userId = authManager.userId else {
+        guard authManager.isLoggedIn else {
             logger.error("User must be logged in")
             return nil
         }
+
         guard !name.isEmpty else {
             logger.error("Pool name cannot be empty")
             return nil
@@ -62,8 +63,7 @@ final class CreatePoolViewModel {
             name: name,
             waterLevel: waterLevel,
             waterCapacity: waterCapacity,
-            filterType: filterType,
-            user: userId
+            filterType: filterType
         )
     }
 }

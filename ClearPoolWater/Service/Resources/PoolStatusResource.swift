@@ -7,10 +7,13 @@
 
 struct PoolStatusResource: APIResource {
     var path: String {
-        poolId != nil ? "/api/poolStatus/pool" : "/api/poolStatus"
+        if let poolId {
+            return "/api/pools/\(poolId)/poolStatus"
+        }
+        return "/api/poolStatus"
     }
 
-    var id: Int? { poolId ?? _id }
+    var id: Int? { _id }
 
     var method: HTTPMethod
     var body: PoolStatus.Create?
@@ -20,13 +23,18 @@ struct PoolStatusResource: APIResource {
 
     init(
         id: Int? = nil,
-        poolId: Int? = nil,
         method: HTTPMethod = .get,
         body: PoolStatus.Create? = nil
     ) {
         _id = id
-        self.poolId = poolId
+        poolId = nil
         self.method = method
         self.body = body
+    }
+
+    init(poolId: Int) {
+        _id = nil
+        self.poolId = poolId
+        self.method = .get
     }
 }

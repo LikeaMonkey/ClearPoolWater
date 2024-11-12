@@ -8,9 +8,8 @@
 struct PoolTasksResource: APIResource {
     typealias ModelType = PoolTask
 
-    var path: String { "/api/poolTasks" }
+    var path: String { "/api/pools/\(poolId)/tasks" }
 
-    var id: Int? { poolId }
     private let poolId: Int
 
     init(poolId: Int) {

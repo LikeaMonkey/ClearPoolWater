@@ -30,6 +30,7 @@ struct PoolTasksView: View {
                         PoolTaskSectionView(title: "Testing", tasks: viewModel.testingTasks)
                     }
                     .listStyle(.insetGrouped)
+                    .scrollContentBackground(.hidden)
 
                 case .failure:
                     ErrorView {

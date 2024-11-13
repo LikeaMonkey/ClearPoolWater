@@ -12,30 +12,31 @@ import SwiftUI
 final class PoolsViewModel {
     var pools = [Pool]()
 
-    private let authManager: AuthManaging
+    private(set) var state = ViewState.loading
+
     private let apiClient: APIClient
+    private let logger = Logger(
+        subsystem: "com.clear.pool.water.pools",
+        category: "PoolsViewModel"
+    )
 
-    private let logger = Logger(subsystem: "com.clear.pool.water.pools", category: "PoolsViewModel")
-
-    init(
-        authManager: AuthManaging = AuthManager.shared,
-        apiClient: APIClient = APIManager()
-    ) {
-        self.authManager = authManager
+    init(apiClient: APIClient = APIManager()) {
         self.apiClient = apiClient
     }
 
     func fetchPools() async {
-        guard authManager.isLoggedIn else {
-            logger.error("User must be logged in")
-            return
-        }
+        state = .loading
 
         do {
             pools = try await apiClient.execute(with: PoolResource())
+            state = .success
+
             logger.info("Pools fetched successfully")
         } catch {
-            logger.error("Pools fetch failed with error: \(error)")
+            state = .failure
+            logger.error(
+                "Pools fetch failed with error: \(error.localizedDescription)"
+            )
         }
     }
 }

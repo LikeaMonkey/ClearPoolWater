@@ -11,33 +11,46 @@ struct PoolsView: View {
     @State private var viewModel = PoolsViewModel()
 
     var body: some View {
-        ZStack {
-            BackgroundView()
-
-            ScrollView {
-                VStack(spacing: 20) {
-                    ForEach(viewModel.pools) { pool in
-                        NavigationLink(destination: PoolDetail(pool: pool)) {
-                            PoolCard(pool: pool)
-                        }
-                        .buttonStyle(.plain)
-                    }
+        BackgroundWrapper {
+            LoadableView(state: viewModel.state) {
+                Task {
+                    await viewModel.fetchPools()
                 }
-                .padding()
+            } content: {
+                content
             }
-            .navigationTitle("Pools")
-            .toolbar {
-                //TODO: Should I add it to ToolbarItem here
+        }
+        .navigationTitle("Pools")
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
                 CreatePoolButton {
                     Task {
                         await viewModel.fetchPools()
                     }
                 }
             }
-            .task {
-                await viewModel.fetchPools()
-            }
         }
+        .task {
+            await viewModel.fetchPools()
+        }
+    }
+
+    private var content: some View {
+        ScrollView {
+            VStack(spacing: 20) {
+                ForEach(viewModel.pools) { pool in
+                    navigationLink(for: pool)
+                }
+            }
+            .padding()
+        }
+    }
+
+    private func navigationLink(for pool: Pool) -> some View {
+        NavigationLink(destination: PoolDetail(pool: pool)) {
+            PoolCard(pool: pool)
+        }
+        .buttonStyle(.plain)
     }
 }
 

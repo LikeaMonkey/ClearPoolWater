@@ -8,20 +8,28 @@
 import SwiftUI
 
 struct BackgroundView: View {
+    @Environment(\.colorScheme) var colorScheme
+
     var body: some View {
         LinearGradient(
             gradient: Gradient(
-                colors: [.poolTopColor, .poolMiddleColor, .poolBottomColor]
+                colors: colorScheme == .dark ? darkColors : lightColors
             ),
             startPoint: .top,
             endPoint: .bottom
         )
         .ignoresSafeArea()
     }
+
+    private var lightColors: [Color] {
+        [.backgroundTop, .backgroundMiddle, .backgroundBottom]
+    }
+
+    private var darkColors: [Color] {
+        [.backgroundTopDark, .backgroundMiddleDark, .backgroundBottomDark]
+    }
 }
 
-extension Color {
-    static let poolTopColor = Color(red: 31 / 255, green: 175 / 255, blue: 255 / 255)
-    static let poolMiddleColor = Color(red: 18 / 255, green: 216 / 255, blue: 250 / 255)
-    static let poolBottomColor = Color(red: 166 / 255, green: 255 / 255, blue: 203 / 255)
+#Preview {
+    BackgroundView()
 }

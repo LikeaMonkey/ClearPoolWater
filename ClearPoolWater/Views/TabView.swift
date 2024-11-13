@@ -11,30 +11,26 @@ struct PoolTabView: View {
     var body: some View {
         TabView {
             Tab("Pools", systemImage: "figure.pool.swim.circle") {
-                NavigationStack {
+                NavigationStackWrapper {
                     PoolsView()
-                        .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
                 }
-                .toolbarBackground(Color.poolBottomColor, for: .tabBar)
             }
 
             Tab("Calculator", systemImage: "plus.forwardslash.minus") {
-                NavigationStack {
+                NavigationStackWrapper {
                     WaterBalanceCalculatorView()
-                        .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
                 }
-                .toolbarBackground(Color.poolBottomColor, for: .tabBar)
             }
 
             Tab("Prediction", systemImage: "photo") {
-                PredictionView()
-                    .toolbarBackground(Color.poolBottomColor, for: .tabBar)
+                NavigationStackWrapper {
+                    PredictionView()
+                }
             }
 
             Tab("Account", systemImage: "person.crop.circle.fill") {
-                NavigationStack {
+                NavigationStackWrapper {
                     AccountView()
-                        .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
                 }
             }
         }

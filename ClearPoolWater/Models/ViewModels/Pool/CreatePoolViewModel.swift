@@ -11,8 +11,8 @@ import SwiftUI
 @Observable
 final class CreatePoolViewModel {
     var name = ""
-    var waterLevel = 80
-    var waterCapacity = 5.0
+    var waterLevel = 0.8
+    var waterCapacity = 10.0
     var filterType = Pool.FilterType.sand
 
     private let authManager: AuthManaging
@@ -56,8 +56,6 @@ final class CreatePoolViewModel {
             logger.error("Pool name cannot be empty")
             return nil
         }
-
-        let waterLevel = Double(waterLevel) / 100
 
         return Pool.Create(
             name: name,

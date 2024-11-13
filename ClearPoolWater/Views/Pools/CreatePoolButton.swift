@@ -18,11 +18,14 @@ struct CreatePoolButton: View {
         } label: {
             Image(systemName: "plus")
         }
-        .fullScreenCover(isPresented: $isCreatePoolPresented) {
-            CreatePoolView()
-                .onDisappear {
-                    onCreatePoolDisappear?()
-                }
+        .sheet(isPresented: $isCreatePoolPresented) {
+            NavigationStack {
+                CreatePoolView()
+                    .presentationDetents([.medium])
+                    .onDisappear {
+                        onCreatePoolDisappear?()
+                    }
+            }
         }
     }
 }

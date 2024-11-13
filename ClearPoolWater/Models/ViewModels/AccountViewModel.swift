@@ -12,42 +12,31 @@ import SwiftUI
 final class AccountViewModel {
     var user: User?
 
-    private(set) var isLoading = false
-    private(set) var errorMessage: String?
+    private(set) var state = ViewState.loading
 
+    private let apiClient: APIClient
     private let logger = Logger(
         subsystem: "com.clear.pool.water.account",
         category: "AccountViewModel"
     )
 
-    private let authManager: AuthManaging
-    private let apiClient: APIClient
-
-    init(
-        authManager: AuthManaging = AuthManager.shared,
-        apiClient: APIClient = APIManager()
-    ) {
-        self.authManager = authManager
+    init(apiClient: APIClient = APIManager()) {
         self.apiClient = apiClient
     }
 
     func fetchAccount() async {
-        isLoading = true
-        defer { isLoading = false }
+        state = .loading
 
         do {
             user = try await apiClient.execute(with: MeResource())
+
+            state = .success
+
+            logger.info("Account fetched successfully")
         } catch {
-            switch error {
-            case APIError.badStatusCode(let code):
-                errorMessage = "Bad status code \(code)!"
-                logger.error("Account fetching failed with bad status code: \(code)")
-            default:
-                errorMessage = "Unexpected error!"
-                logger.error(
-                    "Account fetching failed with an unexpected error: \(error.localizedDescription)"
-                )
-            }
+            state = .failure
+
+            logger.error("Account fetching failed with error: \(error.localizedDescription)")
         }
     }
 }

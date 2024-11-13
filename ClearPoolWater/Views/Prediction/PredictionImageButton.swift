@@ -28,7 +28,7 @@ public struct PredictionImageButton: View {
                     .frame(width: 300, height: 300)
             }
         }
-        .background(.white.opacity(0.8))
+        .background(.regularMaterial)
         .cornerRadius(25)
         .confirmationDialog(
             "Select a pool photo",

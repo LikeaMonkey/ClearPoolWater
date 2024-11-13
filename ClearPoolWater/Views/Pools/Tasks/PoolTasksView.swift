@@ -15,36 +15,40 @@ struct PoolTasksView: View {
     }
 
     var body: some View {
-        ZStack {
-            BackgroundView()
-
-            VStack {
-                switch viewModel.state {
-                case .loading:
-                    ProgressView()
-
-                case .success:
-                    List {
-                        PoolTaskSectionView(title: "Maintenance", tasks: viewModel.maintenanceTasks)
-                        PoolTaskSectionView(title: "Cleaning", tasks: viewModel.cleaningTasks)
-                        PoolTaskSectionView(title: "Testing", tasks: viewModel.testingTasks)
-                    }
-                    .listStyle(.insetGrouped)
-                    .scrollContentBackground(.hidden)
-
-                case .failure:
-                    ErrorView {
-                        Task {
-                            await viewModel.fetchPoolTasks()
-                        }
-                    }
+        BackgroundWrapper {
+            LoadableView(state: viewModel.state) {
+                Task {
+                    await viewModel.fetchPoolTasks()
                 }
+            } content: {
+                tasksList
             }
         }
         .navigationTitle("Pool Tasks")
         .task {
             await viewModel.fetchPoolTasks()
         }
+    }
+
+    private var tasksList: some View {
+        List {
+            PoolTaskSectionView(
+                title: "Maintenance",
+                tasks: viewModel.maintenanceTasks
+            )
+
+            PoolTaskSectionView(
+                title: "Cleaning",
+                tasks: viewModel.cleaningTasks
+            )
+
+            PoolTaskSectionView(
+                title: "Testing",
+                tasks: viewModel.testingTasks
+            )
+        }
+        .listStyle(.insetGrouped)
+        .scrollContentBackground(.hidden)
     }
 }
 

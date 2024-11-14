@@ -13,37 +13,22 @@ struct PoolsViewModelTests {
     @Test
     func testFetchSuccess() async throws {
         let pools = [Pool.example]
-        let model = PoolsViewModel(
-            authManager: MockAuthManager(),
-            apiClient: MockAPIManager(result: pools)
-        )
+        let model = PoolsViewModel(apiClient: MockAPIManager(result: pools))
 
         await model.fetchPools()
 
+        #expect(model.state == .success)
         #expect(model.pools == pools)
     }
 
     @Test
-    func testFetchFailWithUserNotLoggedIn() async throws {
-        let model = PoolsViewModel(
-            authManager: MockAuthManager(isLoggedIn: false),
-            apiClient: MockAPIManager()
-        )
+    func testFetchFail() async throws {
+        let error = APIError.invalidResponse
+        let model = PoolsViewModel(apiClient: MockAPIManager(error: error))
 
         await model.fetchPools()
 
-        #expect(model.pools.isEmpty)
-    }
-
-    @Test
-    func testFetchFailWithUnexpectedError() async throws {
-        let model = PoolsViewModel(
-            authManager: MockAuthManager(),
-            apiClient: MockAPIManager(error: APIError.invalidResponse)
-        )
-
-        await model.fetchPools()
-
+        #expect(model.state == .failure)
         #expect(model.pools.isEmpty)
     }
 }

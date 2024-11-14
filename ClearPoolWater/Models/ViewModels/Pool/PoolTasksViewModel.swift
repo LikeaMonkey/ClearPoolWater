@@ -18,7 +18,6 @@ final class PoolTasksViewModel {
 
     let poolId: Int
 
-    private let authManager: AuthManaging
     private let apiClient: APIClient
 
     private let logger = Logger(
@@ -26,13 +25,8 @@ final class PoolTasksViewModel {
         category: "PoolTasksViewModel"
     )
 
-    init(
-        poolId: Int,
-        authManager: AuthManaging = AuthManager.shared,
-        apiClient: APIClient = APIManager()
-    ) {
+    init(poolId: Int, apiClient: APIClient = APIManager()) {
         self.poolId = poolId
-        self.authManager = authManager
         self.apiClient = apiClient
     }
 

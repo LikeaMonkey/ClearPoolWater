@@ -24,27 +24,36 @@ final class PoolPredictionViewModel {
     var poolImage: Image?
     var resultPredictions: [ImagePrediction] = []
 
-    private(set) var isLoading = false
-    var isPredictionPossible: Bool { selectedPhoto != nil && !isLoading }
+    var isPredictionPossible: Bool {
+        selectedPhoto != nil && !isLoading
+    }
 
-    private let poolImagePredictor: ImagePredictor
+    private(set) var isLoading = false
 
     private var imageData: Data?
 
+    private let poolImagePredictor: ImagePredictor
+    private let imageLoader: ImageLoading
     private let logger = Logger(
         subsystem: "com.clear.pool.water.pool.prediction",
         category: "PoolPredictionViewModel"
     )
 
-    init(poolImagePredictor: ImagePredictor = PoolImagePredictor()) {
+    init(
+        poolImagePredictor: ImagePredictor = PoolImagePredictor(),
+        imageLoader: ImageLoading = PhotosImageLoader()
+    ) {
         self.poolImagePredictor = poolImagePredictor
+        self.imageLoader = imageLoader
     }
 
     func predict() async {
         isLoading = true
         defer { isLoading = false }
 
-        guard let imageData, let imagePhoto = UIImage(data: imageData)?.cgImage else {
+        guard let imageData,
+            let imagePhoto = imageLoader.loadImage(from: imageData)?.cgImage
+        else {
             logger.error("Failed to load image photo for prediction")
             return
         }
@@ -52,8 +61,12 @@ final class PoolPredictionViewModel {
         do {
             let predictions = try await poolImagePredictor.makePredictions(for: imagePhoto)
             resultPredictions = predictions.filter { $0.confidence > 0.05 }
+
+            logger.error("Make pool predictions successfully")
         } catch {
-            logger.error("Failed to make predictions for photo: \(error)")
+            resultPredictions = []
+
+            logger.error("Failed to make predictions for photo: \(error.localizedDescription)")
         }
     }
 
@@ -61,17 +74,17 @@ final class PoolPredictionViewModel {
         isLoading = true
         defer { isLoading = false }
 
-        guard let data = try? await selectedPhoto?.loadTransferable(type: Data.self) else {
-            logger.error("Failed to load selected photo data")
+        guard let selectedPhoto else {
+            logger.error("No selected image to load")
             return
         }
 
-        imageData = data
+        imageData = await imageLoader.loadImageData(from: selectedPhoto)
     }
 
     private func updatePoolImage() {
-        guard let imageData, let image = UIImage(data: imageData) else {
-            logger.error("Failed to update pool image")
+        guard let imageData, let image = imageLoader.loadImage(from: imageData) else {
+            logger.error("Failed to load pool image")
             return
         }
 

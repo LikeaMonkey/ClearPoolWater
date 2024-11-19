@@ -15,19 +15,17 @@ struct PoolTasksView: View {
     }
 
     var body: some View {
-        BackgroundWrapper {
-            LoadableView(state: viewModel.state) {
+        tasksList
+            .loadable(state: viewModel.state) {
                 Task {
                     await viewModel.fetchPoolTasks()
                 }
-            } content: {
-                tasksList
             }
-        }
-        .navigationTitle("Pool Tasks")
-        .task {
-            await viewModel.fetchPoolTasks()
-        }
+            .fancyBackground()
+            .navigationTitle("Pool Tasks")
+            .task {
+                await viewModel.fetchPoolTasks()
+            }
     }
 
     private var tasksList: some View {

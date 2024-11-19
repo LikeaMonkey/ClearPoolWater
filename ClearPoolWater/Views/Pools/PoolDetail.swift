@@ -11,23 +11,20 @@ struct PoolDetail: View {
     let pool: Pool
 
     var body: some View {
-        ZStack {
-            BackgroundView()
-
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    PoolInfoSection(pool: pool)
-                    PoolWaterStatusSection(poolId: pool.id!)
-                    PoolStatusSection(poolId: pool.id!)
-                }
-                .navigationTitle(pool.name)
-                .padding()
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                PoolInfoSection(pool: pool)
+                PoolWaterStatusSection(poolId: pool.id!)
+                PoolStatusSection(poolId: pool.id!)
             }
             .navigationTitle(pool.name)
-            .toolbar {
-                NavigationLink(destination: PoolTasksView(poolId: pool.id!)) {
-                    Image(systemName: "list.bullet.clipboard")
-                }
+            .padding()
+        }
+        .fancyBackground()
+        .navigationTitle(pool.name)
+        .toolbar {
+            NavigationLink(destination: PoolTasksView(poolId: pool.id!)) {
+                Image(systemName: "list.bullet.clipboard")
             }
         }
     }

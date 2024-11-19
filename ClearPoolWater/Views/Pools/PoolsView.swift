@@ -11,15 +11,15 @@ struct PoolsView: View {
     @State private var viewModel = PoolsViewModel()
 
     var body: some View {
-        BackgroundWrapper {
-            LoadableView(state: viewModel.state) {
-                Task {
-                    await viewModel.fetchPools()
-                }
-            } content: {
-                content
+        ScrollView {
+            scrollViewContent
+        }
+        .loadable(state: viewModel.state) {
+            Task {
+                await viewModel.fetchPools()
             }
         }
+        .fancyBackground()
         .navigationTitle("Pools")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
@@ -35,15 +35,13 @@ struct PoolsView: View {
         }
     }
 
-    private var content: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                ForEach(viewModel.pools) { pool in
-                    navigationLink(for: pool)
-                }
+    private var scrollViewContent: some View {
+        VStack(spacing: 20) {
+            ForEach(viewModel.pools) { pool in
+                navigationLink(for: pool)
             }
-            .padding()
         }
+        .padding()
     }
 
     private func navigationLink(for pool: Pool) -> some View {

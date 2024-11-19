@@ -12,34 +12,41 @@ struct PredictionView: View {
     @State private var viewModel = PoolPredictionViewModel()
 
     var body: some View {
-        ZStack {
-            BackgroundView()
+        VStack(spacing: 40) {
+            predictionImageButton
+            predictButton
+            result
+        }
+        .fancyBackground()
+    }
 
-            VStack(spacing: 40) {
-                PredictionImageButton(
-                    image: $viewModel.poolImage,
-                    selectedPhoto: $viewModel.selectedPhoto
-                )
+    private var predictionImageButton: some View {
+        PredictionImageButton(
+            image: $viewModel.poolImage,
+            selectedPhoto: $viewModel.selectedPhoto
+        )
+    }
 
-                PredictButton(
-                    isLoading: viewModel.isLoading,
-                    isDisabled: !viewModel.isPredictionPossible
-                ) {
-                    Task {
-                        await viewModel.predict()
-                    }
-                }
+    private var predictButton: some View {
+        PredictButton(
+            isLoading: viewModel.isLoading,
+            isDisabled: !viewModel.isPredictionPossible
+        ) {
+            Task {
+                await viewModel.predict()
+            }
+        }
+    }
 
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 20) {
-                        ForEach(viewModel.resultPredictions, id: \.self) { result in
-                            PredictionResultView(prediction: result)
-                                .frame(width: 300)
-                        }
-                    }
-                    .padding(.horizontal, 20)
+    private var result: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 20) {
+                ForEach(viewModel.resultPredictions, id: \.self) { result in
+                    PredictionResultView(prediction: result)
+                        .frame(width: 300)
                 }
             }
+            .padding(.horizontal, 20)
         }
     }
 }

@@ -11,18 +11,16 @@ struct AccountView: View {
     @State private var viewModel = AccountViewModel()
 
     var body: some View {
-        BackgroundWrapper {
-            LoadableView(state: viewModel.state) {
-                Task {
-                    await viewModel.fetchAccount()
-                }
-            } content: {
-                AccountInfoView(
-                    email: viewModel.user?.email ?? "-",
-                    role: viewModel.user?.role ?? .user
-                )
+        AccountInfoView(
+            email: viewModel.user?.email ?? "-",
+            role: viewModel.user?.role ?? .user
+        )
+        .loadable(state: viewModel.state) {
+            Task {
+                await viewModel.fetchAccount()
             }
         }
+        .fancyBackground()
         .navigationTitle("My Profile")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -36,9 +34,7 @@ struct AccountView: View {
 
             ToolbarItem {
                 NavigationLink {
-                    BackgroundWrapper {
-                        AccountSettingsView()
-                    }
+                    AccountSettingsView()
                 } label: {
                     Image(systemName: "gear")
                 }

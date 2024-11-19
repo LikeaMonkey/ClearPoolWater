@@ -1,19 +1,18 @@
 //
-//  NavigationStackWrapper.swift
+//  FancyNavigationStack.swift
 //  ClearPoolWater
 //
-//  Created by Stanimir Hristov on 13.11.24.
+//  Created by Stanimir Hristov on 19.11.24.
 //
 
 import SwiftUI
 
-struct NavigationStackWrapper<Content: View>: View {
+struct FancyNavigationStack: ViewModifier {
     @Environment(\.colorScheme) private var colorScheme
-    @ViewBuilder let content: () -> Content
 
-    var body: some View {
+    func body(content: Content) -> some View {
         NavigationStack {
-            content()
+            content
                 .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
         }
         .toolbarBackground(backgroundColor, for: .tabBar)
@@ -24,8 +23,8 @@ struct NavigationStackWrapper<Content: View>: View {
     }
 }
 
-#Preview {
-    NavigationStackWrapper {
-        Text("Preview")
+extension View {
+    func fancyNavigationStack() -> some View {
+        modifier(FancyNavigationStack())
     }
 }

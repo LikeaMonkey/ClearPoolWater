@@ -11,27 +11,23 @@ struct PoolTabView: View {
     var body: some View {
         TabView {
             Tab("Pools", systemImage: "figure.pool.swim.circle") {
-                NavigationStackWrapper {
-                    PoolsView()
-                }
+                PoolsView()
+                    .fancyNavigationStack()
             }
 
             Tab("Calculator", systemImage: "plus.forwardslash.minus") {
-                NavigationStackWrapper {
-                    WaterBalanceCalculatorView()
-                }
+                WaterBalanceCalculatorView()
+                    .fancyNavigationStack()
             }
 
             Tab("Prediction", systemImage: "photo") {
-                NavigationStackWrapper {
-                    PredictionView()
-                }
+                PredictionView()
+                    .fancyNavigationStack()
             }
 
             Tab("Account", systemImage: "person.crop.circle.fill") {
-                NavigationStackWrapper {
-                    AccountView()
-                }
+                AccountView()
+                    .fancyNavigationStack()
             }
         }
     }

@@ -12,7 +12,7 @@ struct PoolsView: View {
 
     var body: some View {
         ScrollView {
-            scrollViewContent
+            content
         }
         .loadable(state: viewModel.state) {
             Task {
@@ -35,7 +35,7 @@ struct PoolsView: View {
         }
     }
 
-    private var scrollViewContent: some View {
+    private var content: some View {
         VStack(spacing: 20) {
             ForEach(viewModel.pools) { pool in
                 navigationLink(for: pool)

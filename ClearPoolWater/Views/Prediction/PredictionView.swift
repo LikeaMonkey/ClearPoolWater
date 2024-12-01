@@ -23,6 +23,7 @@ struct PredictionView: View {
     private var predictionImageButton: some View {
         PredictionImageButton(
             image: $viewModel.poolImage,
+            selectedCameraImage: $viewModel.selectedCameraImage,
             selectedPhoto: $viewModel.selectedPhoto
         )
     }

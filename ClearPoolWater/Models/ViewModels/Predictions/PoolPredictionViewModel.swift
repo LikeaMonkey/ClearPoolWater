@@ -21,11 +21,19 @@ final class PoolPredictionViewModel {
         }
     }
 
+    var selectedCameraImage: UIImage? {
+        didSet {
+            loadSelectedCameraImageData()
+            updatePoolImage()
+        }
+    }
+
     var poolImage: Image?
+
     var resultPredictions: [ImagePrediction] = []
 
     var isPredictionPossible: Bool {
-        selectedPhoto != nil && !isLoading
+        imageData != nil && !isLoading
     }
 
     private(set) var isLoading = false
@@ -60,7 +68,7 @@ final class PoolPredictionViewModel {
 
         do {
             let predictions = try await poolImagePredictor.makePredictions(for: imagePhoto)
-            resultPredictions = predictions.filter { $0.confidence > 0.05 }
+            resultPredictions = predictions  //.filter { $0.confidence > 0.05 }
 
             logger.error("Make pool predictions successfully")
         } catch {
@@ -80,6 +88,15 @@ final class PoolPredictionViewModel {
         }
 
         imageData = await imageLoader.loadImageData(from: selectedPhoto)
+    }
+
+    private func loadSelectedCameraImageData() {
+        guard let selectedCameraImage else {
+            logger.error("No selected camera image")
+            return
+        }
+
+        imageData = imageLoader.loadImageData(from: selectedCameraImage)
     }
 
     private func updatePoolImage() {

@@ -16,4 +16,8 @@ final class PhotosImageLoader: ImageLoading {
     func loadImageData(from item: PhotosPickerItem) async -> Data? {
         try? await item.loadTransferable(type: Data.self)
     }
+
+    func loadImageData(from image: UIImage) -> Data? {
+        image.pngData()
+    }
 }

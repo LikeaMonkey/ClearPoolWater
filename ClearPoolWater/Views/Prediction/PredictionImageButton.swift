@@ -10,9 +10,13 @@ import SwiftUI
 
 public struct PredictionImageButton: View {
     @Binding var image: Image?
+
+    @Binding var selectedCameraImage: UIImage?
     @Binding var selectedPhoto: PhotosPickerItem?
 
     @State private var isConfirmationDialogPresented = false
+
+    @State private var isCameraPickerPresented = false
     @State private var isPhotosPickerPresented = false
 
     public var body: some View {
@@ -36,12 +40,15 @@ public struct PredictionImageButton: View {
             titleVisibility: .visible
         ) {
             Button("Camera") {
-                //TODO: Implement
+                isCameraPickerPresented.toggle()
             }
 
             Button("Photo Library") {
                 isPhotosPickerPresented.toggle()
             }
+        }
+        .fullScreenCover(isPresented: $isCameraPickerPresented) {
+            CameraPickerView(uiImage: $selectedCameraImage)
         }
         .photosPicker(
             isPresented: $isPhotosPickerPresented,
@@ -61,5 +68,9 @@ public struct PredictionImageButton: View {
 }
 
 #Preview {
-    PredictionImageButton(image: .constant(nil), selectedPhoto: .constant(nil))
+    PredictionImageButton(
+        image: .constant(nil),
+        selectedCameraImage: .constant(nil),
+        selectedPhoto: .constant(nil)
+    )
 }

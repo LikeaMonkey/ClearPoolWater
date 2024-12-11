@@ -9,32 +9,28 @@ import SwiftUI
 
 struct ErrorView: View {
     let errorMessage: LocalizedStringKey
-    let reloadAction: (() -> Void)?
+    let actionTitle: LocalizedStringKey
+    let action: (() -> Void)?
 
     init(
-        errorMessage: LocalizedStringKey = Constants.defaultErrorMessage,
-        reloadAction: (() -> Void)? = nil
+        errorMessage: LocalizedStringKey = ErrorMessage.defaultMessage,
+        actionTitle: LocalizedStringKey = "Reload",
+        action: (() -> Void)? = nil
     ) {
         self.errorMessage = errorMessage
-        self.reloadAction = reloadAction
+        self.actionTitle = actionTitle
+        self.action = action
     }
 
     var body: some View {
         VStack(spacing: 12) {
             Text(errorMessage)
 
-            if let reloadAction {
-                Button("Reload", action: reloadAction)
+            if let action {
+                Button(actionTitle, action: action)
             }
         }
         .padding()
-    }
-}
-
-extension ErrorView {
-    struct Constants {
-        static let defaultErrorMessage: LocalizedStringKey =
-            "Something went wrong. Please check your network connection and try again."
     }
 }
 

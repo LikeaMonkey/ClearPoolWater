@@ -44,12 +44,9 @@ struct AccountSettingsView: View {
 
             appVersionInfo
         }
-        .listStyle(.insetGrouped)
-        .listSectionSpacing(20)
-        .contentMargins(.top, 12)
+        .customListStyle()
         .fancyBackground()
         .navigationTitle("Settings")
-        .scrollContentBackground(.hidden)
     }
 
     private var appearanceSection: some View {

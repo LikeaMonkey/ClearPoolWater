@@ -27,25 +27,12 @@ struct CreatePoolView: View {
                 FilterSystemPicker(filterType: $viewModel.filterType)
             }
         }
-        .listStyle(.insetGrouped)
-        .contentMargins(.top, 12)
+        .customListStyle()
         .navigationTitle("New Pool")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                Button("Cancel") {
-                    dismiss()
-                }
-            }
-
-            ToolbarItem(placement: .confirmationAction) {
-                Button("Add") {
-                    Task {
-                        await viewModel.addNewPool()
-                        dismiss()
-                    }
-                }
-            }
+            cancelToolbarItem
+            addToolbarItem
         }
     }
 
@@ -66,6 +53,25 @@ struct CreatePoolView: View {
                 range: 0...150,
                 step: 0.5
             )
+        }
+    }
+
+    private var cancelToolbarItem: some ToolbarContent {
+        ToolbarItem(placement: .cancellationAction) {
+            Button("Cancel") {
+                dismiss()
+            }
+        }
+    }
+
+    private var addToolbarItem: some ToolbarContent {
+        ToolbarItem(placement: .confirmationAction) {
+            Button("Add") {
+                Task {
+                    await viewModel.addNewPool()
+                    dismiss()
+                }
+            }
         }
     }
 }

@@ -11,31 +11,26 @@ struct PoolsView: View {
     @State private var viewModel = PoolsViewModel()
 
     var body: some View {
-        ScrollView {
-            content
-        }
-        .loadable(state: viewModel.state) {
+        LoadableView(state: viewModel.state) {
             Task {
                 await viewModel.fetchPools()
+            }
+        } content: {
+            ScrollView {
+                pools
             }
         }
         .fancyBackground()
         .navigationTitle("Pools")
         .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                CreatePoolButton {
-                    Task {
-                        await viewModel.fetchPools()
-                    }
-                }
-            }
+            addPoolToolbarItem
         }
         .task {
             await viewModel.fetchPools()
         }
     }
 
-    private var content: some View {
+    private var pools: some View {
         VStack(spacing: 20) {
             ForEach(viewModel.pools) { pool in
                 navigationLink(for: pool)
@@ -49,6 +44,16 @@ struct PoolsView: View {
             PoolCard(pool: pool)
         }
         .buttonStyle(.plain)
+    }
+
+    private var addPoolToolbarItem: some ToolbarContent {
+        ToolbarItem(placement: .primaryAction) {
+            CreatePoolButton {
+                Task {
+                    await viewModel.fetchPools()
+                }
+            }
+        }
     }
 }
 

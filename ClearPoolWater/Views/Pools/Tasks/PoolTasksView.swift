@@ -15,17 +15,18 @@ struct PoolTasksView: View {
     }
 
     var body: some View {
-        tasksList
-            .loadable(state: viewModel.state) {
-                Task {
-                    await viewModel.fetchPoolTasks()
-                }
-            }
-            .fancyBackground()
-            .navigationTitle("Pool Tasks")
-            .task {
+        LoadableView(state: viewModel.state) {
+            Task {
                 await viewModel.fetchPoolTasks()
             }
+        } content: {
+            tasksList
+        }
+        .fancyBackground()
+        .navigationTitle("Pool Tasks")
+        .task {
+            await viewModel.fetchPoolTasks()
+        }
     }
 
     private var tasksList: some View {
@@ -34,19 +35,16 @@ struct PoolTasksView: View {
                 title: "Maintenance",
                 tasks: viewModel.maintenanceTasks
             )
-
             PoolTaskSectionView(
                 title: "Cleaning",
                 tasks: viewModel.cleaningTasks
             )
-
             PoolTaskSectionView(
                 title: "Testing",
                 tasks: viewModel.testingTasks
             )
         }
-        .listStyle(.insetGrouped)
-        .scrollContentBackground(.hidden)
+        .customListStyle()
     }
 }
 

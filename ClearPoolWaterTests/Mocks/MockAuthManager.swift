@@ -11,10 +11,8 @@ import Foundation
 @testable import ClearPoolWater
 
 @Observable
-final class MockAuthManager: AuthManaging {
-    var isLoggedIn = false
-    var userId: Int? { internalUserId }
-    var isAdmin: Bool? { false }
+final class MockAuthManager: AuthManaging, @unchecked Sendable {
+    @MainActor var isLoggedIn = false
 
     var token: String? {
         get { tokenSubject.value }
@@ -25,8 +23,7 @@ final class MockAuthManager: AuthManaging {
         tokenSubject.eraseToAnyPublisher()
     }
 
-    private var tokenSubject = CurrentValueSubject<String?, Never>(nil)
-    private var internalUserId: Int?
+    private let tokenSubject = CurrentValueSubject<String?, Never>(nil)
 
     init(isLoggedIn: Bool = true) {
         if isLoggedIn {
@@ -36,13 +33,15 @@ final class MockAuthManager: AuthManaging {
 
     func login(with token: String) {
         self.token = token
-        internalUserId = 1
-        isLoggedIn = true
+        Task { @MainActor in
+            isLoggedIn = true
+        }
     }
 
     func logout() {
         token = nil
-        internalUserId = nil
-        isLoggedIn = false
+        Task { @MainActor in
+            isLoggedIn = false
+        }
     }
 }

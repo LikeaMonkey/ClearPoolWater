@@ -23,8 +23,8 @@ struct LoginViewModelTests {
 
         await model.login()
 
+        #expect(mockAuthManager.isLoggedIn)
         #expect(mockAuthManager.token == token)
-        #expect(mockAuthManager.userId != nil)
 
         #expect(model.errorMessage == nil)
     }
@@ -41,8 +41,8 @@ struct LoginViewModelTests {
 
         await model.login()
 
+        #expect(!mockAuthManager.isLoggedIn)
         #expect(mockAuthManager.token == nil)
-        #expect(mockAuthManager.userId == nil)
 
         let expectedErrorMessage = "Bad status code \(badStatusCode)!"
         #expect(model.errorMessage == expectedErrorMessage)
@@ -58,8 +58,8 @@ struct LoginViewModelTests {
 
         await model.login()
 
+        #expect(!mockAuthManager.isLoggedIn)
         #expect(mockAuthManager.token == nil)
-        #expect(mockAuthManager.userId == nil)
 
         let expectedErrorMessage = "Unexpected error!"
         #expect(model.errorMessage == expectedErrorMessage)

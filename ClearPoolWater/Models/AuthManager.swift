@@ -13,10 +13,7 @@ import JWTDecode
 final class AuthManager: AuthManaging, @unchecked Sendable {
     static let shared = AuthManager()
 
-    var isLoggedIn = false
-
-    var userId: Int? { internalUserId }
-    var isAdmin: Bool? { internalIsAdmin }
+    @MainActor var isLoggedIn = false
 
     var token: String? {
         get { tokenSubject.value }
@@ -27,11 +24,7 @@ final class AuthManager: AuthManaging, @unchecked Sendable {
         tokenSubject.eraseToAnyPublisher()
     }
 
-    private var userToken: UserToken?
-    private var internalUserId: Int?
-    private var internalIsAdmin: Bool?
-
-    private var tokenSubject = CurrentValueSubject<String?, Never>(nil)
+    private let tokenSubject = CurrentValueSubject<String?, Never>(nil)
 
     private init() {
         if let savedToken = loadTokenFromKeychain() {
@@ -45,13 +38,7 @@ final class AuthManager: AuthManaging, @unchecked Sendable {
 
     private func login(with token: String, isFromKeychain: Bool) {
         do {
-            let jwt = try JWTDecode.decode(jwt: token)
-            if let userId = jwt["userId"].integer {
-                internalUserId = userId
-            }
-            if let admin = jwt["admin"].boolean {
-                internalIsAdmin = admin
-            }
+            _ = try JWTDecode.decode(jwt: token)
         } catch {
             assertionFailure("Failed to decode JWT: \(error)")
         }
@@ -62,18 +49,18 @@ final class AuthManager: AuthManaging, @unchecked Sendable {
             saveTokenToKeychain(token)
         }
 
-        isLoggedIn = true
+        Task { @MainActor in
+            isLoggedIn = true
+        }
     }
 
     func logout() {
-        internalUserId = nil
-        internalIsAdmin = nil
-
-        userToken = nil
-
+        token = nil
         deleteTokenFromKeychain()
 
-        isLoggedIn = false
+        Task { @MainActor in
+            isLoggedIn = false
+        }
     }
 
     // MARK: Keychain Support

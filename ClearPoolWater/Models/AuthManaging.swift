@@ -8,12 +8,8 @@
 import Combine
 
 protocol AuthManaging: Sendable {
-    var isLoggedIn: Bool { get set }
-
-    var token: String? { get set }
-    var userId: Int? { get }
-    var isAdmin: Bool? { get }
-
+    @MainActor var isLoggedIn: Bool { get }
+    var token: String? { get }
     var tokenPublisher: AnyPublisher<String?, Never> { get }  // Add publisher for the token
 
     func login(with token: String)

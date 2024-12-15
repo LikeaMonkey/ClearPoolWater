@@ -9,7 +9,7 @@ import Foundation
 
 @testable import ClearPoolWater
 
-final class MockAPIManager: APIClient {
+final class MockAPIManager: APIClient, @unchecked Sendable {
     var result: Any?
     var error: Error?
 

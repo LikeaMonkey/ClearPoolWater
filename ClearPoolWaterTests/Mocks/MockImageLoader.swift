@@ -11,8 +11,8 @@ import SwiftUI
 @testable import ClearPoolWater
 
 final class MockImageLoader: ImageLoading {
-    var image: UIImage?
-    var data: Data?
+    let image: UIImage?
+    let data: Data?
 
     init(image: UIImage? = nil) {
         self.image = image

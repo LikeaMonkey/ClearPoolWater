@@ -54,7 +54,7 @@ final class LoginViewModel {
         let loginResource = LoginResource(email: email, password: password)
         let userToken: UserToken = try await apiClient.execute(with: loginResource)
 
-        await authManager.login(with: userToken.token)
+        authManager.login(with: userToken.token)
 
         logger.info("Login successful")
     }

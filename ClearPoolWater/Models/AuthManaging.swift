@@ -8,7 +8,7 @@
 import Combine
 
 protocol AuthManaging: Sendable {
-    @MainActor var isLoggedIn: Bool { get set }
+    var isLoggedIn: Bool { get set }
 
     var token: String? { get set }
     var userId: Int? { get }
@@ -16,6 +16,6 @@ protocol AuthManaging: Sendable {
 
     var tokenPublisher: AnyPublisher<String?, Never> { get }  // Add publisher for the token
 
-    func login(with token: String) async
-    func logout() async
+    func login(with token: String)
+    func logout()
 }

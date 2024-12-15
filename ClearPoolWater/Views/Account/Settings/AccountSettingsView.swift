@@ -148,9 +148,7 @@ struct AccountSettingsView: View {
 
     private var logOutButton: some View {
         Button {
-            Task {
-                await AuthManager.shared.logout()
-            }
+            AuthManager.shared.logout()
         } label: {
             HStack {
                 Image(systemName: "arrow.forward")

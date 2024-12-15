@@ -45,6 +45,7 @@ struct PoolTasksView: View {
             )
         }
         .customListStyle()
+        .scrollContentBackground(.hidden)
     }
 }
 

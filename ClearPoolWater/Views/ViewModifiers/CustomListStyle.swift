@@ -13,7 +13,6 @@ struct CustomListStyle: ViewModifier {
             .listStyle(.insetGrouped)
             .listSectionSpacing(20)
             .contentMargins(.top, 12)
-            .scrollContentBackground(.hidden)
     }
 }
 

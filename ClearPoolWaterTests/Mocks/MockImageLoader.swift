@@ -21,4 +21,5 @@ final class MockImageLoader: ImageLoading {
 
     func loadImage(from data: Data) -> UIImage? { image }
     func loadImageData(from item: PhotosPickerItem) async -> Data? { data }
+    func loadImageData(from image: UIImage) -> Data? { data }
 }

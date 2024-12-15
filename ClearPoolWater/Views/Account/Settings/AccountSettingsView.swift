@@ -45,6 +45,7 @@ struct AccountSettingsView: View {
             appVersionInfo
         }
         .customListStyle()
+        .scrollContentBackground(.hidden)
         .fancyBackground()
         .navigationTitle("Settings")
     }
@@ -147,7 +148,9 @@ struct AccountSettingsView: View {
 
     private var logOutButton: some View {
         Button {
-            AuthManager.shared.logout()
+            Task {
+                await AuthManager.shared.logout()
+            }
         } label: {
             HStack {
                 Image(systemName: "arrow.forward")

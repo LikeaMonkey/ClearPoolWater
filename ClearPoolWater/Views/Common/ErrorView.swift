@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct ErrorView: View {
-    let errorMessage: LocalizedStringKey
-    let actionTitle: LocalizedStringKey
+    let errorMessage: String
+    let actionTitle: String
     let action: (() -> Void)?
 
     init(
-        errorMessage: LocalizedStringKey = ErrorMessage.defaultMessage,
-        actionTitle: LocalizedStringKey = "Reload",
+        errorMessage: String = ErrorMessage.defaultMessage,
+        actionTitle: String = "Reload",
         action: (() -> Void)? = nil
     ) {
         self.errorMessage = errorMessage

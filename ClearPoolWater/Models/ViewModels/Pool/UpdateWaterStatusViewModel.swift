@@ -8,7 +8,7 @@
 import OSLog
 import SwiftUI
 
-@Observable
+@MainActor @Observable
 final class UpdateWaterStatusViewModel {
     var ph = 0.0
     var chlorine = 0.0

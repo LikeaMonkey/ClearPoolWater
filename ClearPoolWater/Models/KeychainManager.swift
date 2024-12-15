@@ -8,7 +8,7 @@
 import Foundation
 import Security
 
-final class KeychainManager {
+final actor KeychainManager {
     static let shared = KeychainManager()
     private init() {}
 

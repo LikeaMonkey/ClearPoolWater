@@ -9,7 +9,7 @@ import Combine
 import Foundation
 import JWTDecode
 
-@Observable
+@MainActor @Observable
 final class AuthManager: AuthManaging {
     static let shared = AuthManager()
 
@@ -34,16 +34,18 @@ final class AuthManager: AuthManaging {
     private var tokenSubject = CurrentValueSubject<String?, Never>(nil)
 
     private init() {
-        if let savedToken = loadTokenFromKeychain() {
-            login(with: savedToken, isFromKeychain: true)
+        Task {
+            if let savedToken = await loadTokenFromKeychain() {
+                await login(with: savedToken, isFromKeychain: true)
+            }
         }
     }
 
-    func login(with token: String) {
-        login(with: token, isFromKeychain: false)
+    func login(with token: String) async {
+        await login(with: token, isFromKeychain: false)
     }
 
-    private func login(with token: String, isFromKeychain: Bool) {
+    private func login(with token: String, isFromKeychain: Bool) async {
         do {
             let jwt = try JWTDecode.decode(jwt: token)
             if let userId = jwt["userId"].integer {
@@ -59,40 +61,40 @@ final class AuthManager: AuthManaging {
         self.token = token
 
         if !isFromKeychain {
-            saveTokenToKeychain(token)
+            await saveTokenToKeychain(token)
         }
 
         isLoggedIn = true
     }
 
-    func logout() {
+    func logout() async {
         internalUserId = nil
         internalIsAdmin = nil
 
         userToken = nil
 
-        deleteTokenFromKeychain()
+        await deleteTokenFromKeychain()
 
         isLoggedIn = false
     }
 
     // MARK: Keychain Support
 
-    private func saveTokenToKeychain(_ token: String) {
+    private func saveTokenToKeychain(_ token: String) async {
         do {
-            try KeychainManager.shared.saveToken(token, forKey: KeychainKeys.token)
+            try await KeychainManager.shared.saveToken(token, forKey: KeychainKeys.token)
         } catch {
             assertionFailure("Failed to save token to keychain: \(error)")
         }
     }
 
-    private func loadTokenFromKeychain() -> String? {
-        KeychainManager.shared.getToken(forKey: KeychainKeys.token)
+    private func loadTokenFromKeychain() async -> String? {
+        await KeychainManager.shared.getToken(forKey: KeychainKeys.token)
     }
 
-    private func deleteTokenFromKeychain() {
+    private func deleteTokenFromKeychain() async {
         do {
-            try KeychainManager.shared.deleteToken(forKey: KeychainKeys.token)
+            try await KeychainManager.shared.deleteToken(forKey: KeychainKeys.token)
         } catch {
             assertionFailure("Failed to delete token from keychain: \(error)")
         }

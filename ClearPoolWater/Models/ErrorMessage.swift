@@ -8,6 +8,6 @@
 import SwiftUI
 
 struct ErrorMessage {
-    static var defaultMessage: LocalizedStringKey =
+    static let defaultMessage =
         "Something went wrong. Please check your network connection and try again."
 }

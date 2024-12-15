@@ -7,10 +7,12 @@
 
 import Foundation
 
+@MainActor
 protocol APIClient {
-    func execute<R: APIResource, T: Decodable>(with resource: R) async throws -> T
+    func execute<R: APIResource, T: Decodable & Sendable>(with resource: R) async throws -> T
 }
 
+@MainActor
 final class APIManager: APIClient {
     private let urlCache: URLCache
     private let urlRequestBuilder: URLRequestBuilding
@@ -25,7 +27,7 @@ final class APIManager: APIClient {
         self.urlRequestBuilder = urlRequestBuilder
     }
 
-    func execute<R: APIResource, T: Decodable>(with resource: R) async throws -> T {
+    func execute<R: APIResource, T: Decodable & Sendable>(with resource: R) async throws -> T {
         if resource.method == .get, let cachedData = getCachedData(for: resource.url) {
             let decodedData: T = try decodeData(cachedData)
             return decodedData

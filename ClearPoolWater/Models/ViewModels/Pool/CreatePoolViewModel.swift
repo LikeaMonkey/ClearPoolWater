@@ -8,7 +8,7 @@
 import OSLog
 import SwiftUI
 
-@Observable
+@MainActor @Observable
 final class CreatePoolViewModel {
     var name = ""
     var waterLevel = 0.8

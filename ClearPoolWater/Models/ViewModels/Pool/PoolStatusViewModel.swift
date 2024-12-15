@@ -8,7 +8,7 @@
 import OSLog
 import SwiftUI
 
-@Observable
+@MainActor @Observable
 final class PoolStatusViewModel {
     var skimDate = ""
     var vacuumDate = ""

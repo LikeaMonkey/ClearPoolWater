@@ -10,7 +10,7 @@ import OSLog
 import PhotosUI
 import SwiftUI
 
-@Observable
+@MainActor @Observable
 final class PoolPredictionViewModel {
     var selectedPhoto: PhotosPickerItem? {
         didSet {

@@ -9,6 +9,7 @@ import Testing
 
 @testable import ClearPoolWater
 
+@MainActor
 struct LoginViewModelTests {
     @Test
     func testLoginSuccess() async throws {

@@ -9,6 +9,7 @@ import Testing
 
 @testable import ClearPoolWater
 
+@MainActor
 struct PoolsViewModelTests {
     @Test
     func testFetchSuccess() async throws {

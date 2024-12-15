@@ -8,7 +8,7 @@
 import OSLog
 import SwiftUI
 
-@Observable
+@MainActor @Observable
 final class PoolTasksViewModel {
     var cleaningTasks = [PoolTask]()
     var maintenanceTasks = [PoolTask]()

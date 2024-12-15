@@ -8,6 +8,7 @@
 import PhotosUI
 import SwiftUI
 
+@MainActor
 protocol ImageLoading {
     func loadImage(from data: Data) -> UIImage?
     func loadImageData(from item: PhotosPickerItem) async -> Data?

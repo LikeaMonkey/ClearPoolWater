@@ -7,6 +7,7 @@
 
 import CoreGraphics
 
+@MainActor
 protocol ImagePredictor {
     func makePredictions(for photo: CGImage) async throws -> [ImagePrediction]
 }

@@ -358,6 +358,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
 			};
 			name = Debug;
 		};
@@ -413,6 +414,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 6.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -442,7 +444,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = stanimir.hristov.dev.com.clear.pool.water.ClearPoolWater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -472,7 +475,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = stanimir.hristov.dev.com.clear.pool.water.ClearPoolWater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -490,7 +494,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = stanimir.hristov.dev.com.clear.pool.water.ClearPoolWaterTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ClearPoolWater.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ClearPoolWater";
 			};
@@ -509,7 +513,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = stanimir.hristov.dev.com.clear.pool.water.ClearPoolWaterTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ClearPoolWater.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ClearPoolWater";
 			};
@@ -526,7 +530,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = stanimir.hristov.dev.com.clear.pool.water.ClearPoolWaterUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = ClearPoolWater;
 			};
@@ -543,7 +547,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = stanimir.hristov.dev.com.clear.pool.water.ClearPoolWaterUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = ClearPoolWater;
 			};

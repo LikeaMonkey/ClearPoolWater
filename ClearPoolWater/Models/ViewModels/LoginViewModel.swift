@@ -9,7 +9,7 @@ import AuthenticationServices
 import OSLog
 import SwiftUI
 
-@Observable
+@MainActor @Observable
 final class LoginViewModel {
     var email = ""
     var password = ""
@@ -54,7 +54,7 @@ final class LoginViewModel {
         let loginResource = LoginResource(email: email, password: password)
         let userToken: UserToken = try await apiClient.execute(with: loginResource)
 
-        authManager.login(with: userToken.token)
+        await authManager.login(with: userToken.token)
 
         logger.info("Login successful")
     }

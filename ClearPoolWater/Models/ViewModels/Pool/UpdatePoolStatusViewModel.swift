@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@Observable
+@MainActor @Observable
 final class UpdatePoolStatusViewModel {
     var skim = false
     var vacuum = false

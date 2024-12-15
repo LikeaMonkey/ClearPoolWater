@@ -6,12 +6,12 @@
 //
 
 import SwiftUI
-import Vision
+@preconcurrency import Vision
 
 /// A convenience class that makes image classification predictions.
 ///
 /// The Image Predictor creates and reuses an instance of a Core ML image classifier inside a ``VNCoreMLRequest``.
-final class PoolImagePredictor: ImagePredictor {
+final class PoolImagePredictor: ImagePredictor, @unchecked Sendable {
     static func createImageClassifier() -> VNCoreMLModel {
         guard let imageClassifier = try? PoolMaintenanceClassifier() else {
             fatalError("App failed to create a pool image classifier model instance.")

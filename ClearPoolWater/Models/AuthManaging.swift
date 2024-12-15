@@ -7,9 +7,9 @@
 
 import Combine
 
-@MainActor
 protocol AuthManaging: Sendable {
-    var isLoggedIn: Bool { get set }
+    @MainActor var isLoggedIn: Bool { get set }
+
     var token: String? { get set }
     var userId: Int? { get }
     var isAdmin: Bool? { get }

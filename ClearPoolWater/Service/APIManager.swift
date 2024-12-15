@@ -7,12 +7,10 @@
 
 import Foundation
 
-@MainActor
-protocol APIClient {
+protocol APIClient: Sendable {
     func execute<R: APIResource, T: Decodable & Sendable>(with resource: R) async throws -> T
 }
 
-@MainActor
 final class APIManager: APIClient {
     private let urlCache: URLCache
     private let urlRequestBuilder: URLRequestBuilding

@@ -9,19 +9,19 @@ import Combine
 import Foundation
 import JWTDecode
 
-@MainActor @Observable
-final class AuthManager: AuthManaging {
+@Observable
+final class AuthManager: AuthManaging, @unchecked Sendable {
     static let shared = AuthManager()
 
-    var isLoggedIn = false
+    @MainActor var isLoggedIn = false
+
+    var userId: Int? { internalUserId }
+    var isAdmin: Bool? { internalIsAdmin }
 
     var token: String? {
         get { tokenSubject.value }
         set { tokenSubject.send(newValue) }
     }
-
-    var userId: Int? { internalUserId }
-    var isAdmin: Bool? { internalIsAdmin }
 
     var tokenPublisher: AnyPublisher<String?, Never> {
         tokenSubject.eraseToAnyPublisher()
@@ -64,7 +64,9 @@ final class AuthManager: AuthManaging {
             await saveTokenToKeychain(token)
         }
 
-        isLoggedIn = true
+        Task { @MainActor in
+            isLoggedIn = true
+        }
     }
 
     func logout() async {
@@ -75,7 +77,9 @@ final class AuthManager: AuthManaging {
 
         await deleteTokenFromKeychain()
 
-        isLoggedIn = false
+        Task { @MainActor in
+            isLoggedIn = false
+        }
     }
 
     // MARK: Keychain Support

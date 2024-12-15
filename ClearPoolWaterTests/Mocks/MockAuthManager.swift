@@ -12,7 +12,7 @@ import Foundation
 
 @Observable
 final class MockAuthManager: AuthManaging {
-    var isLoggedIn = false
+    @MainActor var isLoggedIn = false
     var userId: Int? { internalUserId }
     var isAdmin: Bool? { false }
 
@@ -37,12 +37,18 @@ final class MockAuthManager: AuthManaging {
     func login(with token: String) {
         self.token = token
         internalUserId = 1
-        isLoggedIn = true
+
+        Task { @MainActor in
+            isLoggedIn = true
+        }
     }
 
     func logout() {
         token = nil
         internalUserId = nil
-        isLoggedIn = false
+
+        Task { @MainActor in
+            isLoggedIn = false
+        }
     }
 }

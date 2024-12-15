@@ -8,11 +8,11 @@
 import Combine
 import Foundation
 
-protocol URLRequestBuilding {
+protocol URLRequestBuilding: Sendable {
     func build<Resource: APIResource>(for resource: Resource) throws -> URLRequest
 }
 
-final class URLRequestBuilder: URLRequestBuilding {
+final class URLRequestBuilder: URLRequestBuilding, @unchecked Sendable {
     private var token: String?
     private var cancellables = Set<AnyCancellable>()
 

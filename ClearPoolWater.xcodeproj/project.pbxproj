@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		961963A52CB6D2FE00C8F95C /* .swift-format in Resources */ = {isa = PBXBuildFile; fileRef = 961963A42CB6D2FE00C8F95C /* .swift-format */; };
+		962926B92D0A4E1300CF779F /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 962926B82D0A4E1300CF779F /* SnapshotTesting */; };
 		96398AB72CCD5893000E9735 /* JWTDecode in Frameworks */ = {isa = PBXBuildFile; productRef = 96398AB62CCD5893000E9735 /* JWTDecode */; };
 /* End PBXBuildFile section */
 
@@ -80,6 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				962926B92D0A4E1300CF779F /* SnapshotTesting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -159,6 +161,7 @@
 			);
 			name = ClearPoolWaterTests;
 			packageProductDependencies = (
+				962926B82D0A4E1300CF779F /* SnapshotTesting */,
 			);
 			productName = ClearPoolWaterTests;
 			productReference = 9609A7862CB6C7EF00E32B76 /* ClearPoolWaterTests.xctest */;
@@ -222,6 +225,7 @@
 			packageReferences = (
 				9619639D2CB6CBD500C8F95C /* XCRemoteSwiftPackageReference "swift-format" */,
 				96398AB52CCD5892000E9735 /* XCRemoteSwiftPackageReference "JWTDecode.swift" */,
+				962926B72D0A4E1300CF779F /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9609A7772CB6C7EE00E32B76 /* Products */;
@@ -603,6 +607,14 @@
 				minimumVersion = 600.0.0;
 			};
 		};
+		962926B72D0A4E1300CF779F /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-snapshot-testing.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.17.6;
+			};
+		};
 		96398AB52CCD5892000E9735 /* XCRemoteSwiftPackageReference "JWTDecode.swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/auth0/JWTDecode.swift.git";
@@ -614,6 +626,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		962926B82D0A4E1300CF779F /* SnapshotTesting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 962926B72D0A4E1300CF779F /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = SnapshotTesting;
+		};
 		96398AB62CCD5893000E9735 /* JWTDecode */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 96398AB52CCD5892000E9735 /* XCRemoteSwiftPackageReference "JWTDecode.swift" */;

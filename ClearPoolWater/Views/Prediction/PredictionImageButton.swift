@@ -23,14 +23,8 @@ public struct PredictionImageButton: View {
         Button {
             isConfirmationDialogPresented.toggle()
         } label: {
-            if let image {
-                image
-                    .resizable()
-                    .frame(width: 300, height: 300)
-            } else {
-                noImageView
-                    .frame(width: 300, height: 300)
-            }
+            imageView
+                .frame(width: 300, height: 300)
         }
         .background(.regularMaterial)
         .cornerRadius(25)
@@ -55,6 +49,15 @@ public struct PredictionImageButton: View {
             selection: $selectedPhoto,
             matching: .images
         )
+    }
+
+    @ViewBuilder
+    private var imageView: some View {
+        if let image {
+            image.resizable()
+        } else {
+            noImageView
+        }
     }
 
     private var noImageView: some View {

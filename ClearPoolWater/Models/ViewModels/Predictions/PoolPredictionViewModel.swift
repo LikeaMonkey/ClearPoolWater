@@ -68,7 +68,7 @@ final class PoolPredictionViewModel {
 
         do {
             let predictions = try await poolImagePredictor.makePredictions(for: imagePhoto)
-            resultPredictions = predictions  //.filter { $0.confidence > 0.05 }
+            resultPredictions = predictions.filter { $0.confidence >= 0.01 }
 
             logger.error("Make pool predictions successfully")
         } catch {

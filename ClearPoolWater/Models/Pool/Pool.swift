@@ -8,7 +8,7 @@
 import Foundation
 
 struct Pool: Codable, Identifiable, Equatable {
-    var id: Int? = nil
+    var id: Int
 
     let name: String
 
@@ -20,6 +20,7 @@ struct Pool: Codable, Identifiable, Equatable {
 
     static var example: Pool {
         Pool(
+            id: 1,
             name: "Test pool",
             waterLevel: 0.8,
             waterCapacity: 5,

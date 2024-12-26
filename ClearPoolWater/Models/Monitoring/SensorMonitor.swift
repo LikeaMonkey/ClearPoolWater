@@ -15,7 +15,7 @@ final class SensorMonitor: NSObject {
         }
     }
 
-    var onReadTemperature: ((Float?) -> Void)?
+    var onReadPh: ((Float?) -> Void)?
     var onPeripheralReady: (() -> Void)?
     var onError: ((Error) -> Void)?
 
@@ -26,20 +26,19 @@ final class SensorMonitor: NSObject {
         peripheral?.discoverServices([UUIDs.sensorService])
     }
 
-    func readTemperature() {
-        guard let tempCharacteristic = discoveredCharacteristics[UUIDs.temperatureCharacteristic]
+    func readPh() {
+        guard let phCharacteristic = discoveredCharacteristics[UUIDs.phCharacteristic]
         else {
             return
         }
 
-        peripheral?.readValue(for: tempCharacteristic)
+        peripheral?.readValue(for: phCharacteristic)
     }
 
     fileprivate func requiredCharacteristicUUIDs(for service: CBService) -> [CBUUID] {
         switch service.uuid {
-        case UUIDs.sensorService
-        where discoveredCharacteristics[UUIDs.temperatureCharacteristic] == nil:
-            return [UUIDs.temperatureCharacteristic]
+        case UUIDs.sensorService where discoveredCharacteristics[UUIDs.phCharacteristic] == nil:
+            return [UUIDs.phCharacteristic]
         default:
             return []
         }
@@ -78,7 +77,7 @@ extension SensorMonitor: CBPeripheralDelegate {
             discoveredCharacteristics[characteristic.uuid] = characteristic
         }
 
-        if discoveredCharacteristics[UUIDs.temperatureCharacteristic] != nil {
+        if discoveredCharacteristics[UUIDs.phCharacteristic] != nil {
             onPeripheralReady?()
         }
     }
@@ -89,9 +88,9 @@ extension SensorMonitor: CBPeripheralDelegate {
         error: Error?
     ) {
         switch characteristic.uuid {
-        case UUIDs.temperatureCharacteristic:
+        case UUIDs.phCharacteristic:
             let value = characteristic.value?.withUnsafeBytes { $0.load(as: Float.self) }
-            onReadTemperature?(value)
+            onReadPh?(value)
         default:
             fatalError()
         }

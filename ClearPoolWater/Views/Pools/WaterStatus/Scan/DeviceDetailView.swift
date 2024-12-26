@@ -10,61 +10,69 @@ import SwiftUI
 
 struct DeviceDetailView: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var viewModel: DeviceDetailViewModel
+    private let viewModel: DeviceDetailViewModel
 
-    init(device: CBPeripheral) {
-        viewModel = DeviceDetailViewModel(device: device)
+    init(pool: Pool, waterStatus: WaterStatus, device: CBPeripheral) {
+        viewModel = DeviceDetailViewModel(pool: pool, waterStatus: waterStatus, device: device)
     }
 
     var body: some View {
         VStack {
             List {
-                temperatureSection
+                phSection
             }
-            disconnectButton
+            updateButton
         }
         .navigationTitle(viewModel.navigationTitle)
+        .onDisappear {
+            viewModel.stopTemperatureUpdates()
+        }
     }
 
-    private var temperatureSection: some View {
-        Section("Temperature") {
+    private var phSection: some View {
+        Section {
             HStack {
-                if viewModel.isDeviceReady {
-                    temperatureText
-                } else {
+                Text(viewModel.phText)
+                    .font(.headline)
+                Spacer()
+                if !viewModel.isReady {
                     ProgressView()
                 }
-
-                Spacer()
-                updateTemperatureButton
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
+        } header: {
+            Text("pH")
+        } footer: {
+            if viewModel.isReady {
+                Text("Last updated: \(viewModel.lastUpdated)")
+            } else {
+                Text("Please wait for device to prepare and gather enough data")
+            }
         }
     }
 
-    private var temperatureText: some View {
-        Text("\(viewModel.temperature?.formatted() ?? "-") °C")
-            .font(.title)
-    }
-
-    private var updateTemperatureButton: some View {
-        Button("Update") {
-            // TODO: Update pool temperature
-        }
-        .disabled(viewModel.temperature == nil)
-    }
-
-    private var disconnectButton: some View {
+    private var updateButton: some View {
         Button {
-            dismiss()
+            Task {
+                await viewModel.updateWaterStatus()
+                dismiss()
+                dismiss()
+            }
         } label: {
-            Text("Disconnect")
-                .font(.title2)
-                .frame(maxWidth: .infinity)
+            if viewModel.isLoading {
+                ProgressView()
+                    .frame(maxWidth: .infinity, alignment: .center)
+            } else {
+                Text("Update")
+                    .font(.title2)
+                    .frame(maxWidth: .infinity)
+            }
         }
         .buttonStyle(.borderedProminent)
         .controlSize(.large)
+        .cornerRadius(Constants.cornerRadius)
+        .disabled(!viewModel.isReady)
         .padding()
     }
 }

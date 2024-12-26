@@ -9,22 +9,29 @@ import CoreBluetooth
 import SwiftUI
 
 struct ScanView: View {
+    let pool: Pool
+    let waterStatus: WaterStatus
+
+    @Environment(\.dismiss) private var dismiss
     @State private var viewModel = ScanViewModel()
 
     var body: some View {
-        VStack {
-            List {
-                nearbyDevicesSection
-            }
+        List {
+            nearbyDevicesSection
         }
         .navigationTitle("Devices")
         .navigationDestination(isPresented: $viewModel.showConnectedDetail) {
             if let device = viewModel.connectedDevice {
-                DeviceDetailView(device: device)
+                DeviceDetailView(pool: pool, waterStatus: waterStatus, device: device)
             }
         }
         .onAppear {
             viewModel.disconnect()
+        }
+        .toolbar {
+            Button("Done") {
+                dismiss()
+            }
         }
     }
 
@@ -55,5 +62,8 @@ struct ScanView: View {
 }
 
 #Preview {
-    ScanView()
+    ScanView(
+        pool: .example,
+        waterStatus: WaterStatus(id: 1, ph: 7.2, chlorine: 1)
+    )
 }

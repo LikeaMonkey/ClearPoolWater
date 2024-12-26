@@ -9,9 +9,5 @@
 		<key>UILaunchScreen</key>
 		<dict/>
 	</dict>
-	<key>NSCameraUsageDescription</key>
-	<string>This app requires camera access for making predictions.</string>
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>This app requires Bluetooth to connect to nearby Monitoring Bluetooth devices.</string>
 </dict>
 </plist>

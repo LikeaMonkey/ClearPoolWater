@@ -9,12 +9,12 @@ import SwiftUI
 
 extension Color {
     // Light theme colors
-    static let backgroundTop = Color(red: 31 / 255, green: 175 / 255, blue: 255 / 255)
-    static let backgroundMiddle = Color(red: 18 / 255, green: 216 / 255, blue: 250 / 255)
-    static let backgroundBottom = Color(red: 166 / 255, green: 255 / 255, blue: 203 / 255)
+    static let backgroundTop = Color(red: 237 / 255, green: 232 / 255, blue: 245 / 255)
+    static let backgroundMiddle = Color(red: 112 / 255, green: 145 / 255, blue: 230 / 255)
+    static let backgroundBottom = Color(red: 237 / 255, green: 232 / 255, blue: 245 / 255)
 
-    // Dark theme colors (darker complements)
-    static let backgroundTopDark = Color(red: 15 / 255, green: 87 / 255, blue: 127 / 255)
-    static let backgroundMiddleDark = Color(red: 9 / 255, green: 108 / 255, blue: 125 / 255)
-    static let backgroundBottomDark = Color(red: 83 / 255, green: 127 / 255, blue: 101 / 255)
+    // Dark theme colors
+    static let backgroundTopDark = Color(red: 11 / 255, green: 12 / 255, blue: 16 / 255)
+    static let backgroundMiddleDark = Color(red: 31 / 255, green: 40 / 255, blue: 51 / 255)
+    static let backgroundBottomDark = Color(red: 11 / 255, green: 12 / 255, blue: 16 / 255)
 }

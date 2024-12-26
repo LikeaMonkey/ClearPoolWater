@@ -38,7 +38,11 @@ final class AuthManager: AuthManaging, @unchecked Sendable {
 
     private func login(with token: String, isFromKeychain: Bool) {
         do {
-            _ = try JWTDecode.decode(jwt: token)
+            let jwt = try JWTDecode.decode(jwt: token)
+            if jwt.expired {
+                logout()
+                return
+            }
         } catch {
             assertionFailure("Failed to decode JWT: \(error)")
         }
@@ -51,6 +55,14 @@ final class AuthManager: AuthManaging, @unchecked Sendable {
 
         Task { @MainActor in
             isLoggedIn = true
+        }
+    }
+
+    func logoutIfSessionExpired() {
+        guard let token, let jwt = try? JWTDecode.decode(jwt: token) else { return }
+
+        if jwt.expired {
+            logout()
         }
     }
 

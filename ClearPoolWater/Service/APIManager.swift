@@ -26,17 +26,16 @@ final class APIManager: APIClient {
     }
 
     func execute<R: APIResource, T: Decodable & Sendable>(with resource: R) async throws -> T {
-        if resource.method == .get, let cachedData = getCachedData(for: resource.url) {
-            let decodedData: T = try decodeData(cachedData)
-            return decodedData
-        }
-
+        //        if resource.method == .get, let cachedData = getCachedData(for: resource.url) {
+        //            let decodedData: T = try decodeData(cachedData)
+        //            return decodedData
+        //        }
         let request = try urlRequestBuilder.build(for: resource)
-        let (data, response) = try await execute(request: request)
+        let (data, _) = try await execute(request: request)
 
         let decodedData: T = try decodeData(data)
 
-        cache(response, data: data, for: resource.url)
+        // cache(response, data: data, for: resource.url)
 
         return decodedData
     }
@@ -49,6 +48,9 @@ final class APIManager: APIClient {
             }
             guard httpResponse.statusCode == 200 else {
                 switch httpResponse.statusCode {
+                case 401:
+                    AuthManager.shared.logoutIfSessionExpired()
+                    throw APIError.client(httpResponse.statusCode)
                 case 400..<500:
                     throw APIError.client(httpResponse.statusCode)
                 case 500..<600:

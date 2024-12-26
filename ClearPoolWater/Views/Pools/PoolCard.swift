@@ -96,41 +96,6 @@ extension PoolCard {
     }
 }
 
-enum PoolCondition {
-    case good, okay, bad, unknown
-
-    var text: String {
-        switch self {
-        case .good: "Good"
-        case .okay: "Okay"
-        case .bad: "Bad"
-        case .unknown: "Unknown"
-        }
-    }
-
-    var color: Color {
-        switch self {
-        case .good: .green
-        case .okay: .yellow
-        case .bad: .red
-        case .unknown: .gray
-        }
-    }
-}
-
-struct PoolConditionBadge: View {
-    let condition: PoolCondition
-
-    var body: some View {
-        Text(condition.text)
-            .font(.subheadline)
-            .padding(.vertical, 4)
-            .padding(.horizontal, 8)
-            .background(condition.color)
-            .clipShape(Capsule())
-    }
-}
-
 #Preview {
     PoolCard(
         pool: Pool.example,

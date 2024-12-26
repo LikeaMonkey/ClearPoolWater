@@ -48,9 +48,7 @@ struct PredictionResultView: View {
             }
             .padding(.top, 10)
         }
-        .padding(20)
-        .background(.regularMaterial)
-        .cornerRadius(25)
+        .cardStyle()
     }
 }
 

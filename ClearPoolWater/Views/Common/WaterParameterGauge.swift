@@ -29,7 +29,7 @@ struct WaterParameterGauge: View {
         Gauge(value: value ?? range.lowerBound, in: range) {
             Text(name)
         } currentValueLabel: {
-            Text(value?.formatted() ?? "-")
+            Text(value?.formatted(.number.precision(.fractionLength(0...1))) ?? "-")
         }
         .gaugeStyle(.accessoryCircular)
         .tint(tintColor)

@@ -14,6 +14,7 @@ struct ContentView: View {
             PoolTabView()
         } else {
             LoginView()
+                .fancyBackground()
         }
     }
 }

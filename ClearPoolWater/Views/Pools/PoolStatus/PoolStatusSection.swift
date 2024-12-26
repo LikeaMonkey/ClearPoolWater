@@ -15,22 +15,21 @@ struct PoolStatusSection: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 20) {
             header
-                .padding(.bottom, 8)
 
-            PoolInfoRow(title: "Skim", value: viewModel.skimDate)
-            PoolInfoRow(title: "Vacuum", value: viewModel.vacuumDate)
-            PoolInfoRow(title: "Brush", value: viewModel.brushDate)
-            PoolInfoRow(title: "Empty Basket", value: viewModel.emptyBasketsDate)
-            PoolInfoRow(title: "Test water", value: viewModel.testWaterDate)
-            PoolInfoRow(title: "Clean Filter", value: viewModel.cleanFilterDate)
-            PoolInfoRow(title: "Run Pump", value: viewModel.runPumpDate)
-            PoolInfoRow(title: "Inspect", value: viewModel.inspectDate)
+            VStack {
+                PoolInfoRow(title: "Skim", value: viewModel.skimDate)
+                PoolInfoRow(title: "Vacuum", value: viewModel.vacuumDate)
+                PoolInfoRow(title: "Brush", value: viewModel.brushDate)
+                PoolInfoRow(title: "Empty Basket", value: viewModel.emptyBasketsDate)
+                PoolInfoRow(title: "Test water", value: viewModel.testWaterDate)
+                PoolInfoRow(title: "Clean Filter", value: viewModel.cleanFilterDate)
+                PoolInfoRow(title: "Run Pump", value: viewModel.runPumpDate)
+                PoolInfoRow(title: "Inspect", value: viewModel.inspectDate)
+            }
         }
-        .padding(20)
-        .background(.regularMaterial)
-        .cornerRadius(10)
+        .cardStyle()
         .task {
             await viewModel.fetchPoolStatus()
         }

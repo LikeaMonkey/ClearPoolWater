@@ -54,7 +54,9 @@ public struct PredictionImageButton: View {
     @ViewBuilder
     private var imageView: some View {
         if let image {
-            image.resizable()
+            image
+                .resizable()
+                .scaledToFill()
         } else {
             noImageView
         }

@@ -1,0 +1,24 @@
+{
+    "fileFormatVersion": "1.0.0",
+    "itemInfoEntries": {
+        "1157C2A0-8CC4-4EAF-8C26-DE0CB5A67393": {
+            "author": "com.apple.CoreML",
+            "description": "External Metadata Overlay",
+            "name": "Metadata.json",
+            "path": "com.apple.CoreML/Metadata.json"
+        },
+        "255B2AA4-FAE7-426E-89C1-B8EDB723D67E": {
+            "author": "com.apple.CoreML",
+            "description": "CoreML Model Specification",
+            "name": "PoolMaintenanceClassifier  v2.0.11.mlmodel",
+            "path": "com.apple.CoreML/PoolMaintenanceClassifier  v2.0.11.mlmodel"
+        },
+        "E017741F-BC3D-4F2C-B548-7FC608B8A9CC": {
+            "author": "com.apple.CoreML",
+            "description": "External FeatureDescription Overlay",
+            "name": "FeatureDescriptions.json",
+            "path": "com.apple.CoreML/FeatureDescriptions.json"
+        }
+    },
+    "rootModelIdentifier": "255B2AA4-FAE7-426E-89C1-B8EDB723D67E"
+}

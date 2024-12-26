@@ -15,14 +15,13 @@ final class WaterStatusViewModel {
     var alkalinity: Double?
     var temperature: Double?
 
+    var waterStatusId: Int?
     var isLoaded: Bool { waterStatusId != nil }
 
     private(set) var isLoading = false
     private(set) var errorMessage: String?
 
-    let poolId: Int
-    var waterStatusId: Int?
-
+    private var poolId: Int?
     private let apiClient: APIClient
 
     private let logger = Logger(
@@ -30,12 +29,17 @@ final class WaterStatusViewModel {
         category: "WaterStatusViewModel"
     )
 
-    init(poolId: Int, apiClient: APIClient = APIManager()) {
-        self.poolId = poolId
+    init(apiClient: APIClient = APIManager()) {
         self.apiClient = apiClient
     }
 
+    func setup(poolId: Int) {
+        self.poolId = poolId
+    }
+
     func fetchWaterStatus() async {
+        guard let poolId else { return }
+
         isLoading = true
         defer { isLoading = false }
 

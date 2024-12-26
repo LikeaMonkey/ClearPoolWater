@@ -8,15 +8,15 @@
 import SwiftUI
 
 struct PoolWaterStatusSection: View {
-    @State private var viewModel: WaterStatusViewModel
+    let pool: Pool
+
+    @Environment(\.temperatureUnit) private var temperatureUnit
+
+    @State private var viewModel = WaterStatusViewModel()
 
     @State private var isConfirmationDialogPresented = false
     @State private var isWaterStatusSheetPresented = false
     @State private var isScanViewPresented = false
-
-    init(poolId: Int) {
-        viewModel = WaterStatusViewModel(poolId: poolId)
-    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
@@ -37,10 +37,9 @@ struct PoolWaterStatusSection: View {
                 waterTraitGauges
             }
         }
-        .padding(20)
-        .background(.regularMaterial)
-        .cornerRadius(10)
+        .cardStyle()
         .task {
+            viewModel.setup(poolId: pool.id)
             await viewModel.fetchWaterStatus()
         }
         .confirmationDialog(
@@ -58,7 +57,7 @@ struct PoolWaterStatusSection: View {
         .sheet(isPresented: $isWaterStatusSheetPresented) {
             NavigationView {
                 UpdateWaterStatusView(
-                    poolId: viewModel.poolId,
+                    poolId: pool.id,
                     waterStatusId: viewModel.waterStatusId!
                 )
             }
@@ -71,7 +70,16 @@ struct PoolWaterStatusSection: View {
         }
         .fullScreenCover(isPresented: $isScanViewPresented) {
             NavigationStack {
-                ScanView()
+                ScanView(
+                    pool: pool,
+                    waterStatus: WaterStatus(
+                        id: viewModel.waterStatusId!,
+                        ph: viewModel.ph!,
+                        chlorine: viewModel.chlorine!,
+                        alkalinity: viewModel.alkalinity,
+                        temperature: viewModel.temperature
+                    )
+                )
             }
         }
     }
@@ -101,14 +109,37 @@ struct PoolWaterStatusSection: View {
             Spacer()
             WaterParameterGauge(
                 name: "Temp",
-                value: viewModel.temperature,
-                range: 0...50,
-                idealRange: 24...30
+                value: temperature,
+                range: temperatureRange,
+                idealRange: temperatureIdealRange
             )
         }
+    }
+
+    private var temperature: Double? {
+        guard let temperature = viewModel.temperature else { return nil }
+        return convert(value: temperature, to: temperatureUnit)
+    }
+
+    private var temperatureRange: ClosedRange<Double> {
+        let low = convert(value: 0, to: temperatureUnit)
+        let high = convert(value: 50, to: temperatureUnit)
+        return low...high
+    }
+
+    private var temperatureIdealRange: ClosedRange<Double> {
+        let low = convert(value: 24, to: temperatureUnit)
+        let high = convert(value: 30, to: temperatureUnit)
+        return low...high
+    }
+
+    private func convert(value: Double, to unit: UnitTemperature) -> Double {
+        var measurement = Measurement(value: value, unit: UnitTemperature.celsius)
+        measurement.convert(to: unit)
+        return measurement.value
     }
 }
 
 #Preview {
-    PoolWaterStatusSection(poolId: 1)
+    PoolWaterStatusSection(pool: .example)
 }

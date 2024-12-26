@@ -14,8 +14,10 @@ struct PoolInfoRow: View {
     var body: some View {
         HStack {
             Text(title)
+                .font(.subheadline)
             Spacer()
             Text("\(value)")
+                .font(.callout)
                 .fontWeight(.semibold)
         }
     }

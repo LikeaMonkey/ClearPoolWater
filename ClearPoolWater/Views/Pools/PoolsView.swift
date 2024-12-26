@@ -13,12 +13,10 @@ struct PoolsView: View {
     var body: some View {
         LoadableView(state: viewModel.state) {
             Task {
-                await viewModel.fetchPools()
+                await viewModel.fetch()
             }
         } content: {
-            ScrollView {
-                pools
-            }
+            poolsList
         }
         .fancyBackground()
         .navigationTitle("Pools")
@@ -26,22 +24,35 @@ struct PoolsView: View {
             addPoolToolbarItem
         }
         .task {
-            await viewModel.fetchPools()
+            await viewModel.fetch()
         }
     }
 
-    private var pools: some View {
-        VStack(spacing: 20) {
-            ForEach(viewModel.pools) { pool in
-                navigationLink(for: pool)
+    private var poolsList: some View {
+        ScrollView {
+            VStack(spacing: 20) {
+                if viewModel.pools.isEmpty {
+                    Text("No pools yet")
+                        .font(.title)
+                } else {
+                    ForEach(viewModel.pools) { pool in
+                        poolRow(for: pool)
+                    }
+                }
             }
+            .padding()
         }
-        .padding()
     }
 
-    private func navigationLink(for pool: Pool) -> some View {
-        NavigationLink(destination: PoolDetail(pool: pool)) {
-            PoolCard(pool: pool)
+    private func poolRow(for pool: Pool) -> some View {
+        PoolRow(
+            pool: pool,
+            poolCondition: viewModel.conditions[pool.id]!,
+            waterStatus: viewModel.waterStatuses[pool.id]!
+        ) {
+            Task {
+                await viewModel.deletePool(poolId: pool.id)
+            }
         }
         .buttonStyle(.plain)
     }
@@ -50,7 +61,7 @@ struct PoolsView: View {
         ToolbarItem(placement: .primaryAction) {
             CreatePoolButton {
                 Task {
-                    await viewModel.fetchPools()
+                    await viewModel.fetch()
                 }
             }
         }

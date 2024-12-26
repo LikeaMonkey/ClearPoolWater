@@ -9,37 +9,136 @@ import SwiftUI
 
 struct PoolCard: View {
     let pool: Pool
+    let poolCondition: PoolCondition
+
+    var temperature: Measurement<UnitTemperature>?
+    let ph: Double
+    let chlorine: Double
+
+    let onViewAction: () -> Void
+    let onDeleteAction: () -> Void
+
+    @State private var isMenuPresented = false
+    @State private var isShowingDialog = false
 
     var body: some View {
-        VStack(alignment: .leading) {
-            Text(pool.name)
-                .font(.headline)
-                .padding(.bottom, 8)
-            HStack {
-                Text("Water level: ")
-                Spacer()
-                Text(pool.waterLevel.formatted())
-                    .font(.subheadline)
+        HStack(spacing: 20) {
+            VStack(alignment: .leading, spacing: 16) {
+                Text(pool.name)
+                    .font(.headline)
+
+                HStack(spacing: 8) {
+                    Text("Condition")
+                        .font(.subheadline)
+                    PoolConditionBadge(condition: poolCondition)
+                    Spacer()
+                }
             }
-            HStack {
-                Text("Water capacity: ")
-                Spacer()
-                Text(pool.waterCapacity.formatted())
-                    .font(.subheadline)
+
+            VStack(alignment: .trailing, spacing: 6) {
+                Text(ph.formatted(numberFormatStyle) + " pH")
+                Text(chlorine.formatted(numberFormatStyle) + " Cl")
+                temperatureText
             }
-            HStack {
-                Text("Filter type: ")
-                Spacer()
-                Text(pool.filterType.toString())
-                    .font(.subheadline)
+            .font(.callout)
+            .fontWeight(.semibold)
+
+            Menu {
+                Button("View") {
+                    onViewAction()
+                }
+                Divider()
+                Button("Delete", role: .destructive) {
+                    isShowingDialog.toggle()
+                }
+            } label: {
+                Image(systemName: "ellipsis")
             }
         }
-        .padding(20)
-        .background(.regularMaterial)
-        .cornerRadius(10)
+        .cardStyle()
+        .confirmationDialog(
+            Constants.deletePoolConfirmationMessage,
+            isPresented: $isShowingDialog,
+            titleVisibility: .visible
+        ) {
+            Button("Delete Pool", role: .destructive) {
+                onDeleteAction()
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var temperatureText: some View {
+        if let temperature {
+            Text(
+                temperature.formatted(
+                    .measurement(
+                        width: .abbreviated,
+                        usage: .asProvided,
+                        numberFormatStyle: numberFormatStyle
+                    )
+                )
+            )
+        } else {
+            EmptyView()
+        }
+    }
+
+    private var numberFormatStyle: FloatingPointFormatStyle<Double> {
+        .number.precision(.fractionLength(0...1))
+    }
+}
+
+extension PoolCard {
+    struct Constants {
+        static let deletePoolConfirmationMessage =
+            "Deleting the pool will erase all information about the pool. Are you sure you want to permanently delete this pool?"
+    }
+}
+
+enum PoolCondition {
+    case good, okay, bad, unknown
+
+    var text: String {
+        switch self {
+        case .good: "Good"
+        case .okay: "Okay"
+        case .bad: "Bad"
+        case .unknown: "Unknown"
+        }
+    }
+
+    var color: Color {
+        switch self {
+        case .good: .green
+        case .okay: .yellow
+        case .bad: .red
+        case .unknown: .gray
+        }
+    }
+}
+
+struct PoolConditionBadge: View {
+    let condition: PoolCondition
+
+    var body: some View {
+        Text(condition.text)
+            .font(.subheadline)
+            .padding(.vertical, 4)
+            .padding(.horizontal, 8)
+            .background(condition.color)
+            .clipShape(Capsule())
     }
 }
 
 #Preview {
-    PoolCard(pool: Pool.example)
+    PoolCard(
+        pool: Pool.example,
+        poolCondition: .good,
+        temperature: Measurement(value: 28.6, unit: UnitTemperature.celsius),
+        ph: 7.4,
+        chlorine: 1.2,
+        onViewAction: {},
+        onDeleteAction: {}
+    )
 }

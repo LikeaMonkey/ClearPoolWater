@@ -9,25 +9,53 @@ import SwiftUI
 
 struct PoolTabView: View {
     var body: some View {
-        TabView {
-            Tab("Pools", systemImage: "figure.pool.swim.circle") {
+        if #available(iOS 18.0, *) {
+            TabView {
+                Tab("Pools", systemImage: "figure.pool.swim.circle") {
+                    PoolsView()
+                        .fancyNavigationStack()
+                }
+
+                Tab("Calculator", systemImage: "plus.forwardslash.minus") {
+                    WaterBalanceCalculatorView()
+                        .fancyNavigationStack()
+                }
+
+                Tab("Prediction", systemImage: "photo") {
+                    PredictionView()
+                        .fancyNavigationStack()
+                }
+
+                Tab("Account", systemImage: "person.crop.circle.fill") {
+                    AccountView()
+                        .fancyNavigationStack()
+                }
+            }
+        } else {
+            TabView {
                 PoolsView()
                     .fancyNavigationStack()
-            }
+                    .tabItem {
+                        Label("Pools", systemImage: "figure.pool.swim.circle")
+                    }
 
-            Tab("Calculator", systemImage: "plus.forwardslash.minus") {
                 WaterBalanceCalculatorView()
                     .fancyNavigationStack()
-            }
+                    .tabItem {
+                        Label("Calculator", systemImage: "plus.forwardslash.minus")
+                    }
 
-            Tab("Prediction", systemImage: "photo") {
                 PredictionView()
                     .fancyNavigationStack()
-            }
+                    .tabItem {
+                        Label("Prediction", systemImage: "photo")
+                    }
 
-            Tab("Account", systemImage: "person.crop.circle.fill") {
                 AccountView()
-                    .fancyNavigationStack()
+                    .fancyBackground()
+                    .tabItem {
+                        Label("Account", systemImage: "person.crop.circle.fill")
+                    }
             }
         }
     }

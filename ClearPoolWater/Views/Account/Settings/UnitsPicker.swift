@@ -8,18 +8,18 @@
 import SwiftUI
 
 struct UnitsPicker: View {
-    @AppStorage("units") var units = "metric"
+    @AppStorage("volume") private var volumeUnit = VolumeUnit.cubicMeters
 
     var body: some View {
-        Picker(selection: $units) {
-            Text("Metric")
-                .tag("metric")
-            Text("Imperial")
-                .tag("imperial")
+        Picker(selection: $volumeUnit) {
+            ForEach(VolumeUnit.allCases) { unit in
+                Text(unit.title)
+                    .tag(unit)
+            }
         } label: {
             HStack {
                 Image(systemName: "compass.drawing")
-                Text("Units")
+                Text("Volume Unit")
             }
         }
     }

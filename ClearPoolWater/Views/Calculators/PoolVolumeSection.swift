@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PoolVolumeSection: View {
     @Binding var poolVolumeValue: Double
+    @FocusState.Binding var focusedField: WaterBalanceCalculatorFocusField?
 
     var body: some View {
         TitledView(title: "Pool Volume") {
@@ -17,10 +18,12 @@ struct PoolVolumeSection: View {
                 range: 0...150,
                 step: 0.5
             )
+            .focused($focusedField, equals: .volume)
         }
     }
 }
 
 #Preview {
-    PoolVolumeSection(poolVolumeValue: .constant(1))
+    let focusedField = FocusState<WaterBalanceCalculatorFocusField?>().projectedValue
+    PoolVolumeSection(poolVolumeValue: .constant(1), focusedField: focusedField)
 }

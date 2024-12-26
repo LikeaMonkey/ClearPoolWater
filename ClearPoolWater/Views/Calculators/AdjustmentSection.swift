@@ -10,6 +10,7 @@ import SwiftUI
 struct AdjustmentSection: View {
     @Binding var currentValue: Double
     @Binding var targetValue: Double
+    @FocusState.Binding var focusedField: WaterBalanceCalculatorFocusField?
 
     var body: some View {
         VStack {
@@ -19,6 +20,7 @@ struct AdjustmentSection: View {
                     range: 0...14,
                     step: 0.1
                 )
+                .focused($focusedField, equals: .current)
             }
             TitledView(title: "Target pH") {
                 SliderTextFieldView(
@@ -26,11 +28,17 @@ struct AdjustmentSection: View {
                     range: 0...14,
                     step: 0.1
                 )
+                .focused($focusedField, equals: .target)
             }
         }
     }
 }
 
 #Preview {
-    AdjustmentSection(currentValue: .constant(1), targetValue: .constant(2))
+    let focusedField = FocusState<WaterBalanceCalculatorFocusField?>().projectedValue
+    AdjustmentSection(
+        currentValue: .constant(1),
+        targetValue: .constant(2),
+        focusedField: focusedField
+    )
 }

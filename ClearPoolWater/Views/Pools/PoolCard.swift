@@ -10,11 +10,9 @@ import SwiftUI
 struct PoolCard: View {
     let pool: Pool
     let poolCondition: PoolCondition
-
-    var temperature: Measurement<UnitTemperature>?
+    let temperature: Measurement<UnitTemperature>?
     let ph: Double
     let chlorine: Double
-
     let onViewAction: () -> Void
     let onDeleteAction: () -> Void
 
@@ -23,37 +21,9 @@ struct PoolCard: View {
 
     var body: some View {
         HStack(spacing: 20) {
-            VStack(alignment: .leading, spacing: 16) {
-                Text(pool.name)
-                    .font(.headline)
-
-                HStack(spacing: 8) {
-                    Text("Condition")
-                        .font(.subheadline)
-                    PoolConditionBadge(condition: poolCondition)
-                    Spacer()
-                }
-            }
-
-            VStack(alignment: .trailing, spacing: 6) {
-                Text(ph.formatted(numberFormatStyle) + " pH")
-                Text(chlorine.formatted(numberFormatStyle) + " Cl")
-                temperatureText
-            }
-            .font(.callout)
-            .fontWeight(.semibold)
-
-            Menu {
-                Button("View") {
-                    onViewAction()
-                }
-                Divider()
-                Button("Delete", role: .destructive) {
-                    isShowingDialog.toggle()
-                }
-            } label: {
-                Image(systemName: "ellipsis")
-            }
+            leadingView
+            trailingView
+            menuButton
         }
         .cardStyle()
         .confirmationDialog(
@@ -64,6 +34,44 @@ struct PoolCard: View {
             Button("Delete Pool", role: .destructive) {
                 onDeleteAction()
             }
+        }
+    }
+
+    private var leadingView: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text(pool.name)
+                .font(.headline)
+
+            HStack(spacing: 8) {
+                Text("Condition")
+                    .font(.subheadline)
+                PoolConditionBadge(condition: poolCondition)
+                Spacer()
+            }
+        }
+    }
+
+    private var trailingView: some View {
+        VStack(alignment: .trailing, spacing: 6) {
+            Text(ph.formatted(numberFormatStyle) + " pH")
+            Text(chlorine.formatted(numberFormatStyle) + " Cl")
+            temperatureText
+        }
+        .font(.callout)
+        .fontWeight(.semibold)
+    }
+
+    private var menuButton: some View {
+        Menu {
+            Button("View") {
+                onViewAction()
+            }
+            Divider()
+            Button("Delete", role: .destructive) {
+                isShowingDialog.toggle()
+            }
+        } label: {
+            Image(systemName: "ellipsis")
         }
     }
 

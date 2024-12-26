@@ -50,7 +50,7 @@ final class PoolImagePredictor: ImagePredictor, @unchecked Sendable {
         request.imageCropAndScaleOption = .centerCrop
 
         #if targetEnvironment(simulator)
-            if #available(iOS 18.0, *) {
+            if #available(iOS 17.0, *) {
                 let allDevices = MLComputeDevice.allComputeDevices
                 for device in allDevices {
                     if case .cpu = device {
@@ -59,7 +59,6 @@ final class PoolImagePredictor: ImagePredictor, @unchecked Sendable {
                     }
                 }
             } else {
-                // Fallback on earlier versions
                 request.usesCPUOnly = true
             }
         #endif

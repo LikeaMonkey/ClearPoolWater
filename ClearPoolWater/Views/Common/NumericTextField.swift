@@ -9,7 +9,7 @@ import SwiftUI
 
 struct NumericTextField: View {
     @Binding var value: Double
-    var range: ClosedRange<Double>
+    let range: ClosedRange<Double>
 
     var body: some View {
         TextField("", value: $value, formatter: NumberFormatter.decimal())
